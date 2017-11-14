@@ -5,25 +5,22 @@ using System.Web;
 
 namespace POSApi.Entities
 {
-    public class MstCustomer
+    public class MstSupplier
     {
         public Int32 Id { get; set; }
-        public String Customer { get; set; }
+        public String Supplier { get; set; }
         public String Address { get; set; }
-        public String ContactPerson { get; set; }
-        public String ContactNumber { get; set; }
-        public Decimal CreditLimit { get; set; }
+        public String SupplierAndAddress { get; set; }
+        public String TelephoneNumber { get; set; }
+        public String CellphoneNumber { get; set; }
+        public String FaxNumber { get; set; }
         public Int32 TermId { get; set; }
         public String TIN { get; set; }
-        public Boolean WithReward { get; set; }
-        public String RewardNumber { get; set; }
-        public Decimal RewardConversion { get; set; }
         public Int32 AccountId { get; set; }
         public Int32 EntryUserId { get; set; }
         public DateTime EntryDateTime { get; set; }
         public Int32 UpdateUserId { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public Boolean IsLocked { get; set; }
-        public String DefaultPriceDescription { get; set; }
     }
 }

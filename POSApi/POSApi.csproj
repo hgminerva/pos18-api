@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -162,6 +163,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\ApiMstCustomerController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -199,8 +201,52 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Data\posDB.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>posDB.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Entities\MstAccount.cs" />
     <Compile Include="Entities\MstCustomer.cs" />
+    <Compile Include="Entities\MstDiscount.cs" />
+    <Compile Include="Entities\MstDiscountItem.cs" />
+    <Compile Include="Entities\MstItem.cs" />
+    <Compile Include="Entities\MstItemComponent.cs" />
+    <Compile Include="Entities\MstItemGroup.cs" />
+    <Compile Include="Entities\MstItemGroupItem.cs" />
+    <Compile Include="Entities\MstItemInventory.cs" />
+    <Compile Include="Entities\MstItemPackage.cs" />
+    <Compile Include="Entities\MstItemPrice.cs" />
+    <Compile Include="Entities\MstPayType.cs" />
+    <Compile Include="Entities\MstPeriod.cs" />
+    <Compile Include="Entities\MstSupplier.cs" />
+    <Compile Include="Entities\MstTable.cs" />
+    <Compile Include="Entities\MstTableGroup.cs" />
+    <Compile Include="Entities\MstTax.cs" />
+    <Compile Include="Entities\MstTerm.cs" />
+    <Compile Include="Entities\MstTerminal.cs" />
+    <Compile Include="Entities\MstUnit.cs" />
+    <Compile Include="Entities\MstUser.cs" />
+    <Compile Include="Entities\MstUserForm.cs" />
+    <Compile Include="Entities\SysAuditTrail.cs" />
+    <Compile Include="Entities\SysForm.cs" />
+    <Compile Include="Entities\SysSalesLocked.cs" />
+    <Compile Include="Entities\TrnCollection.cs" />
+    <Compile Include="Entities\TrnCollectionLine.cs" />
+    <Compile Include="Entities\TrnDebitCreditMemo.cs" />
+    <Compile Include="Entities\TrnDebitCreditMemoLine.cs" />
+    <Compile Include="Entities\TrnDisbursement.cs" />
+    <Compile Include="Entities\TrnJournal.cs" />
+    <Compile Include="Entities\TrnPurchaseOrder.cs" />
+    <Compile Include="Entities\TrnPurchaseOrderLine.cs" />
+    <Compile Include="Entities\TrnSales.cs" />
+    <Compile Include="Entities\TrnSalesLine.cs" />
+    <Compile Include="Entities\TrnStockCount.cs" />
+    <Compile Include="Entities\TrnStockCountLine.cs" />
+    <Compile Include="Entities\TrnStockIn.cs" />
+    <Compile Include="Entities\TrnStockInLine.cs" />
+    <Compile Include="Entities\TrnStockOut.cs" />
+    <Compile Include="Entities\TrnStockOutLine.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -239,6 +285,11 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="Data\posDB.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>posDB.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -268,7 +319,6 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Api\" />
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
@@ -278,6 +328,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\posDB.dbml.layout">
+      <DependentUpon>posDB.dbml</DependentUpon>
+    </None>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
