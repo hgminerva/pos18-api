@@ -20,6 +20,8 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <Use64BitIISExpress />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -163,7 +165,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiControllers\ApiMstAccountController.cs" />
     <Compile Include="ApiControllers\ApiMstCustomerController.cs" />
+    <Compile Include="ApiControllers\ApiMstDiscountController.cs" />
+    <Compile Include="ApiControllers\ApiMstDiscountItemController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemComponentController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemGroupController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemGroupItemController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemInventoryController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemPackageController.cs" />
+    <Compile Include="ApiControllers\ApiMstItemPriceController.cs" />
+    <Compile Include="ApiControllers\ApiMstPayTypeController.cs" />
+    <Compile Include="ApiControllers\ApiMstPeriodController.cs" />
+    <Compile Include="ApiControllers\ApiMstSupplierController.cs" />
+    <Compile Include="ApiControllers\ApiMstTableController.cs" />
+    <Compile Include="ApiControllers\ApiMstTableGroupController.cs" />
+    <Compile Include="ApiControllers\ApiMstTaxController.cs" />
+    <Compile Include="ApiControllers\ApiMstTermController.cs" />
+    <Compile Include="ApiControllers\ApiMstTerminalController.cs" />
+    <Compile Include="ApiControllers\ApiMstUnitController.cs" />
+    <Compile Include="ApiMethod\ApiMstMethodController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />

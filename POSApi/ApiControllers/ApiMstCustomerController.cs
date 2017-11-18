@@ -8,34 +8,9 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-
-    public class ApiMstCustomerController : ApiController
+    [RoutePrefix("api/customer")]
+    public class ApiMstCustomerController : ApiMethod.ApiMstMethodController
     {
-        //*************
-        // DATA CONTEXT
-        //*************
-        private Data.posDBDataContext db = new Data.posDBDataContext();
-
-        //*************
-        //  METHOD ID
-        //*************
-        public Int32 TermId()
-        {
-            var termId = from d in db.MstTerms select d.Id;
-            return termId.FirstOrDefault();
-        }
-
-        public Int32 AccountId()
-        {
-            var accountId = from d in db.MstAccounts select d.Id;
-            return accountId.FirstOrDefault();
-        }
-
-        public Int32 UserId()
-        {
-            var userId = from d in db.MstUsers select d.Id;
-            return userId.FirstOrDefault();
-        }
         //*************
         //LIST CUSTOMER 
         //*************
@@ -70,7 +45,7 @@ namespace POSApi.ApiControllers
         //ADD CUSTOMER 
         //************
         [HttpPost, Route("post")]
-        public Int32 postCustomer(Entities.MstCustomer customer)
+        public Int32 postCustomer()
         {
             try
             {
@@ -156,10 +131,10 @@ namespace POSApi.ApiControllers
         {
             try
             {
-                var activities = from d in db.MstCustomers where d.Id == Convert.ToInt32(id) select d;
-                if (activities.Any())
+                var delete = from d in db.MstCustomers where d.Id == Convert.ToInt32(id) select d;
+                if (delete.Any())
                 {
-                    db.MstCustomers.DeleteOnSubmit(activities.First());
+                    db.MstCustomers.DeleteOnSubmit(delete.First());
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);

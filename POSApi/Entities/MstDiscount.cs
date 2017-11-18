@@ -12,9 +12,12 @@ namespace POSApi.Entities
         public Decimal DiscountRate { get; set; }
         public Boolean IsVatExempt { get; set; }
         public Boolean IsDateScheduled { get; set; }
-        public DateTime DateStart { get; set; }
-        public DateTime DateEnd { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+        public Boolean IsTimeScheduled { get; set; }
         public Boolean IsDayScheduled { get; set; }
+        public DateTime? TimeStart { get; set; }
+        public DateTime? TimeEnd { get; set; }
         public Boolean DayMon { get; set; }
         public Boolean DayTue { get; set; }
         public Boolean DayWed { get; set; }
