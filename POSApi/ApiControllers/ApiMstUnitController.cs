@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/unit")]
-    public class ApiMstUnitController : ApiMethod.ApiMstMethodController
+    public class ApiMstUnitController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST UNIT 

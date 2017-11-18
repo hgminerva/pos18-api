@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/period")]
-    public class ApiMstPeriodController : ApiMethod.ApiMstMethodController
+    public class ApiMstPeriodController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST Period 

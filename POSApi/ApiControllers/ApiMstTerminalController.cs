@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/terminal")]
-    public class ApiMstTerminalController : ApiMethod.ApiMstMethodController
+    public class ApiMstTerminalController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST Terminal 

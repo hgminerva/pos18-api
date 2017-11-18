@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/paytype")]
-    public class ApiMstPayTypeController : ApiMethod.ApiMstMethodController
+    public class ApiMstPayTypeController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST PayType 

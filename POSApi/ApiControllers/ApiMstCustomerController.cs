@@ -9,7 +9,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/customer")]
-    public class ApiMstCustomerController : ApiMethod.ApiMstMethodController
+    public class ApiMstCustomerController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST CUSTOMER 

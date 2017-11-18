@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/itemInventory")]
-    public class ApiMstItemInventoryController  : ApiMethod.ApiMstMethodController
+    public class ApiMstItemInventoryController : ApiMethod.ApiMethodController
     {
         //******************
         //LIST ItemInventory

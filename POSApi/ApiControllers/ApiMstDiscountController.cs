@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/discount")]
-    public class ApiMstDiscountController : ApiMethod.ApiMstMethodController
+    public class ApiMstDiscountController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST DISCOUNT 

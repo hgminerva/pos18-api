@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/supplier")]
-    public class ApiMstSupplierController : ApiMethod.ApiMstMethodController
+    public class ApiMstSupplierController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST Supplier

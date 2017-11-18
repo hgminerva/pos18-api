@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace POSApi.ApiControllers
 {
     [RoutePrefix("api/tax")]
-    public class ApiMstTaxController : ApiMethod.ApiMstMethodController
+    public class ApiMstTaxController : ApiMethod.ApiMethodController
     {
         //*************
         //LIST Tax

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,22 +7,9 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    public class ApiMstUserController : ApiController
+    [RoutePrefix("api/user")]
+    public class ApiMstUserController : ApiMethod.ApiMethodController
     {
-        //*************
-        // DATA CONTEXT
-        //*************
-        private Data.posDBDataContext db = new Data.posDBDataContext();
-
-        //*************
-        //  METHOD ID
-        //*************
-        public Int32 UserId()
-        {
-            var userId = from d in db.MstUsers select d.Id;
-            return userId.FirstOrDefault();
-        }
-
         //*************
         //LIST USER 
         //*************
@@ -31,19 +17,19 @@ namespace POSApi.ApiControllers
         public List<Entities.MstUser> listUser()
         {
             var user = from d in db.MstUsers
-                           select new Entities.MstUser
-                           {
-                               Id = d.Id,
-                               UserName = d.UserName,
-                               Password = d.Password,
-                               FullName = d.FullName,
-                               UserCardNumber = d.UserCardNumber,
-                               EntryUserId = d.EntryUserId,
-                               EntryDateTime = d.EntryDateTime,
-                               UpdateUserId = d.UpdateUserId,
-                               UpdateDateTime = d.UpdateDateTime,
-                               IsLocked = d.IsLocked
-                           };
+                          select new Entities.MstUser
+                          {
+                              Id = d.Id,
+                              UserName = d.UserName,
+                              Password = d.Password,
+                              FullName = d.FullName,
+                              UserCardNumber = d.UserCardNumber,
+                              EntryUserId = d.EntryUserId,
+                              EntryDateTime = d.EntryDateTime,
+                              UpdateUserId = d.UpdateUserId,
+                              UpdateDateTime = d.UpdateDateTime,
+                              IsLocked = d.IsLocked,
+                          };
             return user.ToList();
         }
 
@@ -78,9 +64,9 @@ namespace POSApi.ApiControllers
             }
         }
 
-        //*************
-        //EDIT USER 
-        //*************
+        //**************
+        //UPDATE USER 
+        //**************
         [HttpPut, Route("put/{id}")]
         public HttpResponseMessage putUser(String id, Entities.MstUser user)
         {
@@ -89,16 +75,16 @@ namespace POSApi.ApiControllers
                 var users = from d in db.MstUsers where d.Id == Convert.ToInt32(id) select d;
                 if (users.Any())
                 {
-                    var updateUsers = users.FirstOrDefault();
-                    updateUsers.UserName = user.UserName;
-                    updateUsers.Password = user.Password;
-                    updateUsers.FullName = user.FullName;
-                    updateUsers.UserCardNumber = user.UserCardNumber;
-                    updateUsers.EntryUserId = UserId();
-                    updateUsers.EntryDateTime = DateTime.Today;
-                    updateUsers.UpdateUserId = UserId();
-                    updateUsers.UpdateDateTime = DateTime.Today;
-                    updateUsers.IsLocked = true;
+                    var updateUser = users.FirstOrDefault();
+                    updateUser.UserName = user.UserName;
+                    updateUser.Password = user.Password;
+                    updateUser.FullName = user.FullName;
+                    updateUser.UserCardNumber = user.UserName;
+                    updateUser.EntryUserId = UserId();
+                    updateUser.EntryDateTime = DateTime.Today;
+                    updateUser.UpdateUserId = UserId();
+                    updateUser.UpdateDateTime = DateTime.Today;
+                    updateUser.IsLocked = true;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
@@ -110,7 +96,7 @@ namespace POSApi.ApiControllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                // Debug.WriteLine(e);
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
@@ -138,7 +124,7 @@ namespace POSApi.ApiControllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                //Debug.WriteLine(e);
                 return Request.CreateResponse(HttpStatusCode.BadRequest);
             }
         }
