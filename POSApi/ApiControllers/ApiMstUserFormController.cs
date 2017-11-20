@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/userForm")]
+    [RoutePrefix("api/userform")]
     public class ApiMstUserFormController : ApiMethod.ApiMethodController
     {
         //*************

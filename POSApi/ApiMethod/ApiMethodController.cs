@@ -150,12 +150,6 @@ namespace POSApi.ApiMethod
             return salesId.FirstOrDefault();
         }
 
-        //TRNSALES
-        public Int32 SalesId()
-        {
-            var salesId = from d in db.TrnSales select d.Id;
-            return salesId.FirstOrDefault();
-        }
         //TRNCOLLECTION
         public Int32 CollectionId()
         {
@@ -182,13 +176,6 @@ namespace POSApi.ApiMethod
         {
             var purchaseOrderId = from d in db.TrnPurchaseOrders select d.Id;
             return purchaseOrderId.FirstOrDefault();
-        }
-
-        //TRNSALES
-        public Int32 SalesId()
-        {
-            var salesId = from d in db.TrnSales select d.Id;
-            return salesId.FirstOrDefault();
         }
 
         //TRNSTOCKCOUNT

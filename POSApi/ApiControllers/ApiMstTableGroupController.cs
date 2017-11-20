@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/tableGroup")]
+    [RoutePrefix("api/tablegroup")]
     public class ApiMstTableGroupController : ApiMethod.ApiMethodController
     {
         //*************

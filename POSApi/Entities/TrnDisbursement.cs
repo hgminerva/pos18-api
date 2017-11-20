@@ -18,7 +18,7 @@ namespace POSApi.Entities
         public Int32 TerminalId { get; set; }
         public String Remarks { get; set; }
         public Boolean IsReturn { get; set; }
-        public Int32 StockInId { get; set; }
+        public Int32? StockInId { get; set; }
         public Int32 PreparedBy { get; set; }
         public Int32 CheckedBy { get; set; }
         public Int32 ApprovedBy { get; set; }
@@ -27,16 +27,19 @@ namespace POSApi.Entities
         public DateTime EntryDateTime { get; set; }
         public Int32 UpdateUserId { get; set; }
         public DateTime UpdateDateTime { get; set; }
-        public Decimal Amount1000 { get; set; }
-        public Decimal Amount500 { get; set; }
-        public Decimal Amount200 { get; set; }
-        public Decimal Amount100 { get; set; }
-        public Decimal Amount50 { get; set; }
-        public Decimal Amount20 { get; set; }
-        public Decimal Amount10 { get; set; }
-        public Decimal Amount5 { get; set; }
-        public Decimal Amount1 { get; set; }
-        public Decimal Amount025 { get; set; }
-        public Decimal Amount010 { get; set; }
+        public Decimal? Amount1000 { get; set; }
+        public Decimal? Amount500 { get; set; }
+        public Decimal? Amount200 { get; set; }
+        public Decimal? Amount100 { get; set; }
+        public Decimal? Amount50 { get; set; }
+        public Decimal? Amount20 { get; set; }
+        public Decimal? Amount10 { get; set; }
+        public Decimal? Amount5 { get; set; }
+        public Decimal? Amount1 { get; set; }
+        public Decimal? Amount025 { get; set; }
+        public Decimal? Amount010 { get; set; }
+        public Decimal? Amount005 { get; set; }
+        public Decimal? Amount001 { get; set; }
+        public String Payee { get; set; }
     }
 }

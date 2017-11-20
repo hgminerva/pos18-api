@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/collectionLine")]
+    [RoutePrefix("api/collectionline")]
     public class ApiTrnCollectionLineController : ApiMethod.ApiMethodController
     {
         //********************

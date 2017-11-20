@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/itemGroup")]
+    [RoutePrefix("api/itemgroup")]
     public class ApiMstItemGroupController : ApiMethod.ApiMethodController
     {
         //*************
