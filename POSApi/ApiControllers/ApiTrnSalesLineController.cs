@@ -48,29 +48,29 @@ namespace POSApi.ApiControllers
         //ADD          SALESLINE
         //**********************
         [HttpPost, Route("post")]
-        public Int32 postSalesLine()
+        public Int32 postSalesLine(Entities.TrnSalesLine objSalesLine)
         {
             try
             {
 
                 Data.TrnSalesLine newSalesLine = new Data.TrnSalesLine();
-                newSalesLine.SalesId = SalesId();
-                newSalesLine.ItemId = ItemId();
-                newSalesLine.UnitId = UnitId();
-                newSalesLine.Price = 0;
-                newSalesLine.DiscountId = DiscountId();
-                newSalesLine.DiscountRate = 0;
-                newSalesLine.DiscountAmount = 0;
-                newSalesLine.NetPrice = 0;
-                newSalesLine.Quantity = 0;
-                newSalesLine.Amount = 0;
-                newSalesLine.TaxId = TaxId();
-                newSalesLine.TaxRate = 0;
-                newSalesLine.TaxAmount = 0;
-                newSalesLine.SalesAccountId = AccountId();
-                newSalesLine.AssetAccountId = AccountId();
-                newSalesLine.CostAccountId = AccountId();
-                newSalesLine.TaxAccountId = AccountId();
+                newSalesLine.SalesId = objSalesLine.SalesId;
+                newSalesLine.ItemId = objSalesLine.ItemId;
+                newSalesLine.UnitId = objSalesLine.UnitId;
+                newSalesLine.Price = objSalesLine.Price;
+                newSalesLine.DiscountId = objSalesLine.DiscountId;
+                newSalesLine.DiscountRate = objSalesLine.DiscountRate;
+                newSalesLine.DiscountAmount = objSalesLine.DiscountAmount;
+                newSalesLine.NetPrice = objSalesLine.NetPrice;
+                newSalesLine.Quantity = objSalesLine.Quantity;
+                newSalesLine.Amount = objSalesLine.Amount;
+                newSalesLine.TaxId = objSalesLine.TaxId;
+                newSalesLine.TaxRate = objSalesLine.TaxRate;
+                newSalesLine.TaxAmount = objSalesLine.TaxAmount;
+                newSalesLine.SalesAccountId = objSalesLine.SalesAccountId;
+                newSalesLine.AssetAccountId = objSalesLine.AssetAccountId;
+                newSalesLine.CostAccountId = objSalesLine.CostAccountId;
+                newSalesLine.TaxAccountId = objSalesLine.TaxAccountId;
                 newSalesLine.SalesLineTimeStamp = DateTime.Today;
                 newSalesLine.UserId = UserId();
                 newSalesLine.Preparation = "n/a";

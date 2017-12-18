@@ -58,7 +58,7 @@ namespace POSApi.ApiControllers
         //ADD              SALES
         //**********************
         [HttpPost, Route("post")]
-        public Int32 postSales()
+        public Int32 postSales(Entities.TrnSales objSales)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace POSApi.ApiControllers
                 newSales.SalesNumber = "n/a";
                 newSales.ManualInvoiceNumber = "n/a";
                 newSales.Amount = 0;
-                newSales.TableId = TableId();
+                newSales.TableId = objSales.TableId;
                 newSales.CustomerId = CustomerId();
                 newSales.AccountId = AccountId();
                 newSales.TermId = TermId();
