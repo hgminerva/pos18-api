@@ -58,51 +58,49 @@ namespace POSApi.ApiControllers
         //ADD              SALES
         //**********************
         [HttpPost, Route("post")]
-        public Int32 postSales(Entities.TrnSales objSales)
+        public HttpResponseMessage postSales(Entities.TrnSales objSales)
         {
             try
             {
-
                 Data.TrnSale newSales = new Data.TrnSale();
-                newSales.PeriodId = PeriodId();
-                newSales.SalesDate = DateTime.Today;
-                newSales.SalesNumber = "n/a";
-                newSales.ManualInvoiceNumber = "n/a";
-                newSales.Amount = 0;
+                newSales.PeriodId = objSales.PeriodId;
+                newSales.SalesDate = objSales.SalesDate;
+                newSales.SalesNumber = objSales.SalesNumber;
+                newSales.ManualInvoiceNumber = objSales.ManualInvoiceNumber;
+                newSales.Amount = objSales.Amount;
                 newSales.TableId = objSales.TableId;
-                newSales.CustomerId = CustomerId();
-                newSales.AccountId = AccountId();
-                newSales.TermId = TermId();
-                newSales.DiscountId = StockInId();
-                newSales.SeniorCitizenId = "n/a";
-                newSales.SeniorCitizenName = "n/a";
-                newSales.SeniorCitizenAge = 0;
-                newSales.Remarks = "n/a";
-                newSales.SalesAgent = UserId();
-                newSales.TerminalId = TerminalId();
-                newSales.PreparedBy = UserId();
-                newSales.CheckedBy = UserId();
-                newSales.ApprovedBy = UserId();
-                newSales.IsLocked = false;
-                newSales.IsCancelled = false;
-                newSales.PaidAmount = 0;
-                newSales.CreditAmount = 0;
-                newSales.DebitAmount = 0;
-                newSales.BalanceAmount = 0;
+                newSales.CustomerId = objSales.CustomerId;
+                newSales.AccountId = objSales.AccountId;
+                newSales.TermId = objSales.TermId;
+                newSales.DiscountId = objSales.DiscountId;
+                newSales.SeniorCitizenId = objSales.SeniorCitizenId;
+                newSales.SeniorCitizenName = objSales.SeniorCitizenName;
+                newSales.SeniorCitizenAge = objSales.SeniorCitizenAge;
+                newSales.Remarks = objSales.Remarks;
+                newSales.SalesAgent = objSales.SalesAgent;
+                newSales.TerminalId = objSales.TerminalId;
+                newSales.PreparedBy = objSales.PreparedBy;
+                newSales.CheckedBy = objSales.CheckedBy;
+                newSales.ApprovedBy = objSales.ApprovedBy;
+                newSales.IsLocked = objSales.IsLocked;
+                newSales.IsCancelled = objSales.IsCancelled;
+                newSales.PaidAmount = objSales.PaidAmount;
+                newSales.CreditAmount = objSales.CreditAmount;
+                newSales.DebitAmount = objSales.DebitAmount;
+                newSales.BalanceAmount = objSales.BalanceAmount;
                 newSales.EntryUserId = UserId();
                 newSales.EntryDateTime = DateTime.Today;
                 newSales.UpdateUserId = UserId();
                 newSales.UpdateDateTime = DateTime.Today;
-                newSales.Pax = 0;
+                newSales.Pax = objSales.Pax;
                 db.TrnSales.InsertOnSubmit(newSales);
                 db.SubmitChanges();
 
-                return newSales.Id;
-
+                return Request.CreateResponse(HttpStatusCode.OK, newSales.Id);
             }
             catch (Exception e)
             {
-                return 0;
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }
 
@@ -160,8 +158,7 @@ namespace POSApi.ApiControllers
             }
             catch (Exception e)
             {
-                // Debug.WriteLine(e);
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }
 

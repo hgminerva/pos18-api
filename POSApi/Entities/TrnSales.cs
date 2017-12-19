@@ -41,7 +41,6 @@ namespace POSApi.Entities
         public Int32 UpdateUserId { get; set; }
         public DateTime UpdateDateTime { get; set; }
         public Int32? Pax { get; set; }
-        public String SalesNumDateBalanceAmount { get; set; }
         public Int32 TableStatus { get; set; }
     }
 }

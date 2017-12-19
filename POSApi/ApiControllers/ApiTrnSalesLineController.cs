@@ -48,7 +48,7 @@ namespace POSApi.ApiControllers
         //ADD          SALESLINE
         //**********************
         [HttpPost, Route("post")]
-        public Int32 postSalesLine(Entities.TrnSalesLine objSalesLine)
+        public HttpResponseMessage postSalesLine(Entities.TrnSalesLine objSalesLine)
         {
             try
             {
@@ -77,12 +77,12 @@ namespace POSApi.ApiControllers
                 db.TrnSalesLines.InsertOnSubmit(newSalesLine);
                 db.SubmitChanges();
 
-                return newSalesLine.Id;
-
+                return Request.CreateResponse(HttpStatusCode.OK, newSalesLine.Id);
             }
             catch (Exception e)
             {
-                return 0;
+                // Debug.WriteLine(e);
+                return Request.CreateResponse(HttpStatusCode.BadRequest,e);
             }
         }
 
