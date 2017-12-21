@@ -14,10 +14,8 @@ namespace POSApi.Entities
         public String ManualInvoiceNumber { get; set; }
         public Decimal Amount { get; set; }
         public Int32? TableId { get; set; }
-        public String TableCode { get; set; }
         public Int32 CustomerId { get; set; }
         public Int32 AccountId { get; set; }
-        public String AccountName { get; set; }
         public Int32 TermId { get; set; }
         public Int32? DiscountId { get; set; }
         public String SeniorCitizenId { get; set; }
