@@ -52,7 +52,6 @@ namespace POSApi.ApiControllers
         {
             try
             {
-
                 Data.TrnSalesLine newSalesLine = new Data.TrnSalesLine();
                 newSalesLine.SalesId = objSalesLine.SalesId;
                 newSalesLine.ItemId = objSalesLine.ItemId;
@@ -65,7 +64,7 @@ namespace POSApi.ApiControllers
                 newSalesLine.Quantity = objSalesLine.Quantity;
                 newSalesLine.Amount = objSalesLine.Amount;
                 newSalesLine.TaxId = objSalesLine.TaxId;
-                newSalesLine.TaxRate = objSalesLine.TaxRate;
+                newSalesLine.TaxRate = TaxRate("4");
                 newSalesLine.TaxAmount = objSalesLine.TaxAmount;
                 newSalesLine.SalesAccountId = objSalesLine.SalesAccountId;
                 newSalesLine.AssetAccountId = objSalesLine.AssetAccountId;
@@ -76,7 +75,6 @@ namespace POSApi.ApiControllers
                 newSalesLine.Preparation = "n/a";
                 db.TrnSalesLines.InsertOnSubmit(newSalesLine);
                 db.SubmitChanges();
-
                 return Request.CreateResponse(HttpStatusCode.OK, newSalesLine.Id);
             }
             catch (Exception e)
