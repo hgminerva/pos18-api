@@ -110,9 +110,9 @@ namespace POSApi.ApiMethod
             return taxId.FirstOrDefault();
         }
 
-        public Decimal TaxRate(String id)
+        public Decimal TaxRate(int id)
         {
-            var rate = from d in db.MstTaxes where d.Id == Convert.ToInt32(id) select d.Rate;
+            var rate = from d in db.MstTaxes where d.Id == id select d.Rate;
             return rate.FirstOrDefault();
         }
         //MSTTERM

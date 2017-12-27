@@ -64,7 +64,7 @@ namespace POSApi.ApiControllers
                 newSalesLine.Quantity = objSalesLine.Quantity;
                 newSalesLine.Amount = objSalesLine.Amount;
                 newSalesLine.TaxId = objSalesLine.TaxId;
-                newSalesLine.TaxRate = TaxRate("4");
+                newSalesLine.TaxRate = TaxRate(TaxId());
                 newSalesLine.TaxAmount = objSalesLine.TaxAmount;
                 newSalesLine.SalesAccountId = objSalesLine.SalesAccountId;
                 newSalesLine.AssetAccountId = objSalesLine.AssetAccountId;
