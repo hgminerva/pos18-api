@@ -10,6 +10,21 @@ namespace POSApi.ApiControllers
     [RoutePrefix("api/sales")]
     public class ApiTrnSalesController : ApiMethod.ApiMethodController
     {
+        // ===================
+        // Fill Leading Zeroes
+        // ===================
+        public String FillLeadingZeroes(Int32 number, Int32 length)
+        {
+            var result = number.ToString();
+            var pad = length - result.Length;
+            while (pad > 0)
+            {
+                result = '0' + result;
+                pad--;
+            }
+
+            return result;
+        }
         //**********************
         //LIST             SALES
         //**********************
@@ -17,40 +32,40 @@ namespace POSApi.ApiControllers
         public List<Entities.TrnSales> listSales()
         {
             var sales = from d in db.TrnSales
-                              select new Entities.TrnSales
-                              {
-                                  Id = d.Id,
-                                  PeriodId = d.PeriodId,
-                                  SalesDate = d.SalesDate,
-                                  SalesNumber = d.SalesNumber,
-                                  ManualInvoiceNumber = d.ManualInvoiceNumber,
-                                  Amount = d.Amount,
-                                  TableId = d.TableId,
-                                  CustomerId = d.CustomerId,
-                                  AccountId = d.AccountId,
-                                  TermId = d.TermId,
-                                  DiscountId = d.DiscountId,
-                                  SeniorCitizenId = d.SeniorCitizenId,
-                                  SeniorCitizenName = d.SeniorCitizenName,
-                                  SeniorCitizenAge = d.SeniorCitizenAge,
-                                  Remarks = d.Remarks,
-                                  SalesAgent = d.SalesAgent,
-                                  TerminalId = d.TerminalId,
-                                  PreparedBy = d.PreparedBy,
-                                  CheckedBy = d.CheckedBy,
-                                  ApprovedBy = d.ApprovedBy,
-                                  IsLocked = d.IsLocked,
-                                  IsCancelled = d.IsCancelled,
-                                  PaidAmount = d.PaidAmount,
-                                  CreditAmount = d.CreditAmount,
-                                  DebitAmount = d.DebitAmount,
-                                  BalanceAmount = d.BalanceAmount,
-                                  EntryUserId = d.EntryUserId,
-                                  EntryDateTime = d.EntryDateTime,
-                                  UpdateUserId = d.UpdateUserId,
-                                  UpdateDateTime = d.UpdateDateTime,
-                                  Pax = d.Pax,
-                              };
+                        select new Entities.TrnSales
+                        {
+                            Id = d.Id,
+                            PeriodId = d.PeriodId,
+                            SalesDate = d.SalesDate,
+                            SalesNumber = d.SalesNumber,
+                            ManualInvoiceNumber = d.ManualInvoiceNumber,
+                            Amount = d.Amount,
+                            TableId = d.TableId,
+                            CustomerId = d.CustomerId,
+                            AccountId = d.AccountId,
+                            TermId = d.TermId,
+                            DiscountId = d.DiscountId,
+                            SeniorCitizenId = d.SeniorCitizenId,
+                            SeniorCitizenName = d.SeniorCitizenName,
+                            SeniorCitizenAge = d.SeniorCitizenAge,
+                            Remarks = d.Remarks,
+                            SalesAgent = d.SalesAgent,
+                            TerminalId = d.TerminalId,
+                            PreparedBy = d.PreparedBy,
+                            CheckedBy = d.CheckedBy,
+                            ApprovedBy = d.ApprovedBy,
+                            IsLocked = d.IsLocked,
+                            IsCancelled = d.IsCancelled,
+                            PaidAmount = d.PaidAmount,
+                            CreditAmount = d.CreditAmount,
+                            DebitAmount = d.DebitAmount,
+                            BalanceAmount = d.BalanceAmount,
+                            EntryUserId = d.EntryUserId,
+                            EntryDateTime = d.EntryDateTime,
+                            UpdateUserId = d.UpdateUserId,
+                            UpdateDateTime = d.UpdateDateTime,
+                            Pax = d.Pax,
+                        };
             return sales.ToList();
         }
 
@@ -60,12 +75,26 @@ namespace POSApi.ApiControllers
         [HttpPost, Route("post")]
         public HttpResponseMessage postSales(Entities.TrnSales objSales)
         {
+            var defaultPeriod = from d in db.MstPeriods select d;
+
+            var lastSINumber = from d in db.TrnSales.OrderByDescending(d => d.Id) select d;
+            var salesInNumberResult = defaultPeriod.FirstOrDefault().Period + "-000001";
+
+            if (lastSINumber.Any())
+            {
+                var salesInNumberSplitStrings = lastSINumber.FirstOrDefault().SalesNumber;
+                Int32 secondIndex = salesInNumberSplitStrings.IndexOf('-', salesInNumberSplitStrings.IndexOf('-'));
+                var salesInNumberSplitStringValue = salesInNumberSplitStrings.Substring(secondIndex + 1);
+                var salesInNumber = Convert.ToInt32(salesInNumberSplitStringValue) + 000001;
+                salesInNumberResult = defaultPeriod.FirstOrDefault().Period + "-" + FillLeadingZeroes(salesInNumber, 6);
+            }
+
             try
             {
                 Data.TrnSale newSales = new Data.TrnSale();
                 newSales.PeriodId = objSales.PeriodId;
                 newSales.SalesDate = objSales.SalesDate;
-                newSales.SalesNumber = objSales.SalesNumber;
+                newSales.SalesNumber = salesInNumberResult;
                 newSales.ManualInvoiceNumber = objSales.ManualInvoiceNumber;
                 newSales.Amount = objSales.Amount;
                 newSales.TableId = objSales.TableId;
