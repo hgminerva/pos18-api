@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
+    [Authorize]
     [RoutePrefix("api/discountitem")]
     public class ApiMstDiscountItemController : ApiMethod.ApiMethodController
     {

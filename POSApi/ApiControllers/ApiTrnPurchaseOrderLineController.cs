@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
+    [Authorize]
     [RoutePrefix("api/purchaseorderline")]
     public class ApiTrnPurchaseOrderLineController : ApiMethod.ApiMethodController
     {

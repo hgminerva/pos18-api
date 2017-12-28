@@ -7,6 +7,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
+    [Authorize]
     [RoutePrefix("api/table")]
     public class ApiMstTableController : ApiMethod.ApiMethodController
     {
