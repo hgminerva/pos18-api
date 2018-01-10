@@ -22,7 +22,9 @@ namespace POSApi.ApiControllers
                             {
                                 Id = d.Id,
                                 ItemId = d.ItemId,
+                                Item = d.MstItem.ItemDescription,
                                 ItemGroupId = d.ItemGroupId,
+                                ItemGroup = d.MstItemGroup.ItemGroup
                             };
             return itemGroupItem.ToList();
         }
