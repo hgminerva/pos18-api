@@ -123,6 +123,7 @@ namespace POSApi.ApiControllers
                 newSales.UpdateUserId = UserId();
                 newSales.UpdateDateTime = DateTime.Today;
                 newSales.Pax = objSales.Pax;
+                newSales.TableStatus = objSales.TableStatus;
                 db.TrnSales.InsertOnSubmit(newSales);
                 db.SubmitChanges();
 
@@ -177,6 +178,7 @@ namespace POSApi.ApiControllers
                     updateSales.UpdateUserId = UserId();
                     updateSales.UpdateDateTime = DateTime.Today;
                     updateSales.Pax = sale.Pax;
+                    updateSales.TableStatus = sale.TableStatus;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);
