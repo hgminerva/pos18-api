@@ -66,6 +66,7 @@ namespace POSApi.ApiControllers
                             UpdateUserId = d.UpdateUserId,
                             UpdateDateTime = d.UpdateDateTime,
                             Pax = d.Pax,
+                            CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " "
                         };
             return sales.ToList();
         }

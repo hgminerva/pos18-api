@@ -39,5 +39,6 @@ namespace POSApi.Entities
         public DateTime UpdateDateTime { get; set; }
         public Int32? Pax { get; set; }
         public Int32 TableStatus { get; set; }
+        public String CollectionNumber { get; set; }
     }
 }
