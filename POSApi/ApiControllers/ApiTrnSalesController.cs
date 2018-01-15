@@ -168,7 +168,7 @@ namespace POSApi.ApiControllers
                     updateSales.PreparedBy = sale.PreparedBy;
                     updateSales.CheckedBy = sale.CheckedBy;
                     updateSales.ApprovedBy = sale.ApprovedBy;
-                    updateSales.IsLocked = true;
+                    updateSales.IsLocked = sale.IsLocked;
                     updateSales.IsCancelled = sale.IsCancelled;
                     updateSales.PaidAmount = sale.PaidAmount;
                     updateSales.CreditAmount = sale.CreditAmount;
