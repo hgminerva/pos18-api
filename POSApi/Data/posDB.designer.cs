@@ -1629,6 +1629,8 @@ namespace POSApi.Data
 		
 		private EntitySet<AspNetUserRole> _AspNetUserRoles;
 		
+		private EntitySet<MstUser> _MstUsers;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -1664,6 +1666,7 @@ namespace POSApi.Data
 			this._AspNetUserClaims = new EntitySet<AspNetUserClaim>(new Action<AspNetUserClaim>(this.attach_AspNetUserClaims), new Action<AspNetUserClaim>(this.detach_AspNetUserClaims));
 			this._AspNetUserLogins = new EntitySet<AspNetUserLogin>(new Action<AspNetUserLogin>(this.attach_AspNetUserLogins), new Action<AspNetUserLogin>(this.detach_AspNetUserLogins));
 			this._AspNetUserRoles = new EntitySet<AspNetUserRole>(new Action<AspNetUserRole>(this.attach_AspNetUserRoles), new Action<AspNetUserRole>(this.detach_AspNetUserRoles));
+			this._MstUsers = new EntitySet<MstUser>(new Action<MstUser>(this.attach_MstUsers), new Action<MstUser>(this.detach_MstUsers));
 			OnCreated();
 		}
 		
@@ -1946,6 +1949,19 @@ namespace POSApi.Data
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_MstUser", Storage="_MstUsers", ThisKey="Id", OtherKey="AspNetUserId")]
+		public EntitySet<MstUser> MstUsers
+		{
+			get
+			{
+				return this._MstUsers;
+			}
+			set
+			{
+				this._MstUsers.Assign(value);
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1997,6 +2013,18 @@ namespace POSApi.Data
 		}
 		
 		private void detach_AspNetUserRoles(AspNetUserRole entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = null;
+		}
+		
+		private void attach_MstUsers(MstUser entity)
+		{
+			this.SendPropertyChanging();
+			entity.AspNetUser = this;
+		}
+		
+		private void detach_MstUsers(MstUser entity)
 		{
 			this.SendPropertyChanging();
 			entity.AspNetUser = null;
@@ -9774,6 +9802,8 @@ namespace POSApi.Data
 		
 		private bool _IsLocked;
 		
+		private string _AspNetUserId;
+		
 		private EntitySet<MstCustomer> _MstCustomers;
 		
 		private EntitySet<MstCustomer> _MstCustomers1;
@@ -9860,6 +9890,8 @@ namespace POSApi.Data
 		
 		private EntitySet<TrnStockOut> _TrnStockOuts4;
 		
+		private EntityRef<AspNetUser> _AspNetUser;
+		
     #region Extensibility Method Definitions
     partial void OnLoaded();
     partial void OnValidate(System.Data.Linq.ChangeAction action);
@@ -9884,6 +9916,8 @@ namespace POSApi.Data
     partial void OnUpdateDateTimeChanged();
     partial void OnIsLockedChanging(bool value);
     partial void OnIsLockedChanged();
+    partial void OnAspNetUserIdChanging(string value);
+    partial void OnAspNetUserIdChanged();
     #endregion
 		
 		public MstUser()
@@ -9931,6 +9965,7 @@ namespace POSApi.Data
 			this._TrnStockOuts2 = new EntitySet<TrnStockOut>(new Action<TrnStockOut>(this.attach_TrnStockOuts2), new Action<TrnStockOut>(this.detach_TrnStockOuts2));
 			this._TrnStockOuts3 = new EntitySet<TrnStockOut>(new Action<TrnStockOut>(this.attach_TrnStockOuts3), new Action<TrnStockOut>(this.detach_TrnStockOuts3));
 			this._TrnStockOuts4 = new EntitySet<TrnStockOut>(new Action<TrnStockOut>(this.attach_TrnStockOuts4), new Action<TrnStockOut>(this.detach_TrnStockOuts4));
+			this._AspNetUser = default(EntityRef<AspNetUser>);
 			OnCreated();
 		}
 		
@@ -10130,6 +10165,30 @@ namespace POSApi.Data
 					this._IsLocked = value;
 					this.SendPropertyChanged("IsLocked");
 					this.OnIsLockedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AspNetUserId", DbType="NVarChar(128) NOT NULL", CanBeNull=false)]
+		public string AspNetUserId
+		{
+			get
+			{
+				return this._AspNetUserId;
+			}
+			set
+			{
+				if ((this._AspNetUserId != value))
+				{
+					if (this._AspNetUser.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAspNetUserIdChanging(value);
+					this.SendPropertyChanging();
+					this._AspNetUserId = value;
+					this.SendPropertyChanged("AspNetUserId");
+					this.OnAspNetUserIdChanged();
 				}
 			}
 		}
@@ -10690,6 +10749,40 @@ namespace POSApi.Data
 			set
 			{
 				this._TrnStockOuts4.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="AspNetUser_MstUser", Storage="_AspNetUser", ThisKey="AspNetUserId", OtherKey="Id", IsForeignKey=true)]
+		public AspNetUser AspNetUser
+		{
+			get
+			{
+				return this._AspNetUser.Entity;
+			}
+			set
+			{
+				AspNetUser previousValue = this._AspNetUser.Entity;
+				if (((previousValue != value) 
+							|| (this._AspNetUser.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._AspNetUser.Entity = null;
+						previousValue.MstUsers.Remove(this);
+					}
+					this._AspNetUser.Entity = value;
+					if ((value != null))
+					{
+						value.MstUsers.Add(this);
+						this._AspNetUserId = value.Id;
+					}
+					else
+					{
+						this._AspNetUserId = default(string);
+					}
+					this.SendPropertyChanged("AspNetUser");
+				}
 			}
 		}
 		
@@ -18058,6 +18151,8 @@ namespace POSApi.Data
 		
 		private int _TableStatus;
 		
+		private System.Nullable<int> _DiscountedPax;
+		
 		private EntitySet<SysSalesLocked> _SysSalesLockeds;
 		
 		private EntitySet<TrnCollection> _TrnCollections;
@@ -18158,6 +18253,8 @@ namespace POSApi.Data
     partial void OnPaxChanged();
     partial void OnTableStatusChanging(int value);
     partial void OnTableStatusChanged();
+    partial void OnDiscountedPaxChanging(System.Nullable<int> value);
+    partial void OnDiscountedPaxChanged();
     #endregion
 		
 		public TrnSale()
@@ -18861,6 +18958,26 @@ namespace POSApi.Data
 					this._TableStatus = value;
 					this.SendPropertyChanged("TableStatus");
 					this.OnTableStatusChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DiscountedPax", DbType="Int")]
+		public System.Nullable<int> DiscountedPax
+		{
+			get
+			{
+				return this._DiscountedPax;
+			}
+			set
+			{
+				if ((this._DiscountedPax != value))
+				{
+					this.OnDiscountedPaxChanging(value);
+					this.SendPropertyChanging();
+					this._DiscountedPax = value;
+					this.SendPropertyChanged("DiscountedPax");
+					this.OnDiscountedPaxChanged();
 				}
 			}
 		}

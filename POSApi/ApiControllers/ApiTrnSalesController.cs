@@ -26,6 +26,103 @@ namespace POSApi.ApiControllers
 
             return result;
         }
+
+        //************************
+        //LIST BY DATE RANGE SALES
+        //************************
+        [HttpGet, Route("getSalesPerDateRange/{dateStart}/{dateEnd}")]
+        public List<Entities.TrnSales> getSalesPerDateRange(String dateStart, String dateEnd)
+        {
+            var sales = from d in db.TrnSales
+                        where d.SalesDate >= Convert.ToDateTime(dateStart)
+                        && d.SalesDate <= Convert.ToDateTime(dateEnd)
+                        select new Entities.TrnSales
+                        {
+                            Id = d.Id,
+                            PeriodId = d.PeriodId,
+                            SalesDate = d.SalesDate,
+                            SalesNumber = d.SalesNumber,
+                            ManualInvoiceNumber = d.ManualInvoiceNumber,
+                            Amount = d.Amount,
+                            TableId = d.TableId,
+                            CustomerId = d.CustomerId,
+                            AccountId = d.AccountId,
+                            TermId = d.TermId,
+                            DiscountId = d.DiscountId,
+                            SeniorCitizenId = d.SeniorCitizenId,
+                            SeniorCitizenName = d.SeniorCitizenName,
+                            SeniorCitizenAge = d.SeniorCitizenAge,
+                            Remarks = d.Remarks,
+                            SalesAgent = d.SalesAgent,
+                            TerminalId = d.TerminalId,
+                            PreparedBy = d.PreparedBy,
+                            CheckedBy = d.CheckedBy,
+                            ApprovedBy = d.ApprovedBy,
+                            IsLocked = d.IsLocked,
+                            IsCancelled = d.IsCancelled,
+                            PaidAmount = d.PaidAmount,
+                            CreditAmount = d.CreditAmount,
+                            DebitAmount = d.DebitAmount,
+                            BalanceAmount = d.BalanceAmount,
+                            EntryUserId = d.EntryUserId,
+                            EntryDateTime = d.EntryDateTime,
+                            UpdateUserId = d.UpdateUserId,
+                            UpdateDateTime = d.UpdateDateTime,
+                            Pax = d.Pax,
+                            CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " ",
+                            DiscountedPax = d.DiscountedPax
+                        };
+            return sales.ToList();
+        }
+
+        //*****************
+        //GET BY ID - SALES
+        //*****************
+        [HttpGet, Route("getSalesPerSalesId/{id}")]
+        public Entities.TrnSales getSalesPerSalesId(String id)
+        {
+            var sales = from d in db.TrnSales
+                        where d.Id == Convert.ToInt32(id)
+                        select new Entities.TrnSales
+                        {
+                            Id = d.Id,
+                            PeriodId = d.PeriodId,
+                            SalesDate = d.SalesDate,
+                            SalesNumber = d.SalesNumber,
+                            ManualInvoiceNumber = d.ManualInvoiceNumber,
+                            Amount = d.Amount,
+                            TableId = d.TableId,
+                            CustomerId = d.CustomerId,
+                            AccountId = d.AccountId,
+                            TermId = d.TermId,
+                            DiscountId = d.DiscountId,
+                            SeniorCitizenId = d.SeniorCitizenId,
+                            SeniorCitizenName = d.SeniorCitizenName,
+                            SeniorCitizenAge = d.SeniorCitizenAge,
+                            Remarks = d.Remarks,
+                            SalesAgent = d.SalesAgent,
+                            TerminalId = d.TerminalId,
+                            PreparedBy = d.PreparedBy,
+                            CheckedBy = d.CheckedBy,
+                            ApprovedBy = d.ApprovedBy,
+                            IsLocked = d.IsLocked,
+                            IsCancelled = d.IsCancelled,
+                            PaidAmount = d.PaidAmount,
+                            CreditAmount = d.CreditAmount,
+                            DebitAmount = d.DebitAmount,
+                            BalanceAmount = d.BalanceAmount,
+                            EntryUserId = d.EntryUserId,
+                            EntryDateTime = d.EntryDateTime,
+                            UpdateUserId = d.UpdateUserId,
+                            UpdateDateTime = d.UpdateDateTime,
+                            Pax = d.Pax,
+                            CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " ",
+                            DiscountedPax = d.DiscountedPax
+                        };
+
+            return sales.FirstOrDefault();
+        }
+
         //**********************
         //LIST             SALES
         //**********************
@@ -66,7 +163,8 @@ namespace POSApi.ApiControllers
                             UpdateUserId = d.UpdateUserId,
                             UpdateDateTime = d.UpdateDateTime,
                             Pax = d.Pax,
-                            CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " "
+                            CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " ",
+                            DiscountedPax = d.DiscountedPax
                         };
             return sales.ToList();
         }
@@ -125,6 +223,7 @@ namespace POSApi.ApiControllers
                 newSales.UpdateDateTime = DateTime.Today;
                 newSales.Pax = objSales.Pax;
                 newSales.TableStatus = objSales.TableStatus;
+                newSales.DiscountedPax = objSales.DiscountedPax;
                 db.TrnSales.InsertOnSubmit(newSales);
                 db.SubmitChanges();
 
@@ -180,6 +279,7 @@ namespace POSApi.ApiControllers
                     updateSales.UpdateDateTime = DateTime.Today;
                     updateSales.Pax = sale.Pax;
                     updateSales.TableStatus = sale.TableStatus;
+                    updateSales.DiscountedPax = sale.DiscountedPax;
                     db.SubmitChanges();
 
                     return Request.CreateResponse(HttpStatusCode.OK);

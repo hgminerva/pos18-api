@@ -11,6 +11,31 @@ namespace POSApi.ApiControllers
     [RoutePrefix("api/user")]
     public class ApiMstUserController : ApiMethod.ApiMethodController
     {
+        //*********************
+        //GET USER PER USERNAME
+        //*********************
+        [HttpGet, Route("getUserInfoPerUsername/{username}")]
+        public Entities.MstUser getUserInfoPerUsername(String username)
+        {
+            var user = from d in db.MstUsers
+                       where d.UserName.Equals(username)
+                       select new Entities.MstUser
+                       {
+                           Id = d.Id,
+                           UserName = d.UserName,
+                           Password = d.Password,
+                           FullName = d.FullName,
+                           UserCardNumber = d.UserCardNumber,
+                           EntryUserId = d.EntryUserId,
+                           EntryDateTime = d.EntryDateTime,
+                           UpdateUserId = d.UpdateUserId,
+                           UpdateDateTime = d.UpdateDateTime,
+                           IsLocked = d.IsLocked,
+                       };
+
+            return user.FirstOrDefault();
+        }
+
         //*************
         //LIST USER 
         //*************
@@ -18,19 +43,19 @@ namespace POSApi.ApiControllers
         public List<Entities.MstUser> listUser()
         {
             var user = from d in db.MstUsers
-                          select new Entities.MstUser
-                          {
-                              Id = d.Id,
-                              UserName = d.UserName,
-                              Password = d.Password,
-                              FullName = d.FullName,
-                              UserCardNumber = d.UserCardNumber,
-                              EntryUserId = d.EntryUserId,
-                              EntryDateTime = d.EntryDateTime,
-                              UpdateUserId = d.UpdateUserId,
-                              UpdateDateTime = d.UpdateDateTime,
-                              IsLocked = d.IsLocked,
-                          };
+                       select new Entities.MstUser
+                       {
+                           Id = d.Id,
+                           UserName = d.UserName,
+                           Password = d.Password,
+                           FullName = d.FullName,
+                           UserCardNumber = d.UserCardNumber,
+                           EntryUserId = d.EntryUserId,
+                           EntryDateTime = d.EntryDateTime,
+                           UpdateUserId = d.UpdateUserId,
+                           UpdateDateTime = d.UpdateDateTime,
+                           IsLocked = d.IsLocked,
+                       };
             return user.ToList();
         }
 
