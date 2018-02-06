@@ -72,6 +72,7 @@ namespace POSApi.ApiControllers
                             CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " ",
                             DiscountedPax = d.DiscountedPax
                         };
+
             return sales.ToList();
         }
 
@@ -166,6 +167,7 @@ namespace POSApi.ApiControllers
                             CollectionNumber = d.TrnCollections != null ? d.TrnCollections.Where(c => c.SalesId == d.Id).FirstOrDefault().CollectionNumber : " ",
                             DiscountedPax = d.DiscountedPax
                         };
+
             return sales.ToList();
         }
 
