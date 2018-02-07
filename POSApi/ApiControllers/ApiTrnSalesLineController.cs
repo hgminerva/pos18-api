@@ -4,13 +4,86 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using POSApi.Entities;
 
 namespace POSApi.ApiControllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("api/salesline")]
     public class ApiTrnSalesLineController : ApiMethod.ApiMethodController
     {
+        //****************************
+        //LIST BY DATE RANGE SALESLINE
+        //****************************
+        [HttpGet, Route("listByDateRange/{dateStart}/{dateEnd}")]
+        public List<Entities.TrnSalesLine> listSalesLineByDateRange(String dateStart, String dateEnd)
+        {
+            var salesLine = from d in db.TrnSalesLines
+                            where d.TrnSale.SalesDate >= Convert.ToDateTime(dateStart)
+                            && d.TrnSale.SalesDate <= Convert.ToDateTime(dateEnd)
+                            select new Entities.TrnSalesLine
+                            {
+                                Id = d.Id,
+                                SalesId = d.SalesId,
+                                ItemId = d.ItemId,
+                                UnitId = d.UnitId,
+                                Price = d.Price,
+                                DiscountId = d.DiscountId,
+                                DiscountRate = d.DiscountRate,
+                                DiscountAmount = d.DiscountAmount,
+                                NetPrice = d.NetPrice,
+                                Quantity = d.Quantity,
+                                Amount = d.Amount,
+                                TaxId = d.TaxId,
+                                TaxRate = d.TaxRate,
+                                TaxAmount = d.TaxAmount,
+                                SalesAccountId = d.SalesAccountId,
+                                AssetAccountId = d.AssetAccountId,
+                                CostAccountId = d.CostAccountId,
+                                TaxAccountId = d.TaxAccountId,
+                                SalesLineTimeStamp = d.SalesLineTimeStamp,
+                                UserId = d.UserId,
+                                Preparation = d.Preparation,
+                            };
+            return salesLine.ToList();
+        }
+
+        //******************
+        //DETAIL SALES LINE
+        //******************
+        [HttpGet, Route("detail/{id}")]
+        public TrnSalesLine detailSalesLine(String id)
+        {
+            var sales = from d in db.TrnSalesLines
+                         where d.Id == Convert.ToInt32(id)
+                          select new Entities.TrnSalesLine
+                          {
+                              Id = d.Id,
+                              SalesId = d.SalesId,
+                              ItemId = d.ItemId,
+                              UnitId = d.UnitId,
+                              Price = d.Price,
+                              DiscountId = d.DiscountId,
+                              DiscountRate = d.DiscountRate,
+                              DiscountAmount = d.DiscountAmount,
+                              NetPrice = d.NetPrice,
+                              Quantity = d.Quantity,
+                              Amount = d.Amount,
+                              TaxId = d.TaxId,
+                              TaxRate = d.TaxRate,
+                              TaxAmount = d.TaxAmount,
+                              SalesAccountId = d.SalesAccountId,
+                              AssetAccountId = d.AssetAccountId,
+                              CostAccountId = d.CostAccountId,
+                              TaxAccountId = d.TaxAccountId,
+                              SalesLineTimeStamp = d.SalesLineTimeStamp,
+                              UserId = d.UserId,
+                              Preparation = d.Preparation,
+
+                          };
+            return (TrnSalesLine)sales.FirstOrDefault();
+        }
+
         //**********************
         //LIST         SALESLINE
         //**********************
@@ -84,7 +157,6 @@ namespace POSApi.ApiControllers
                 return Request.CreateResponse(HttpStatusCode.BadRequest,e);
             }
         }
-
 
         //**********************
         //UPDATE       SALESLINE 

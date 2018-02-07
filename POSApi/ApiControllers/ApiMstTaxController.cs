@@ -4,10 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using POSApi.Entities;
 
 namespace POSApi.ApiControllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("api/tax")]
     public class ApiMstTaxController : ApiMethod.ApiMethodController
     {
@@ -27,6 +28,26 @@ namespace POSApi.ApiControllers
                            AccountId = d.AccountId
                        };
             return tax.ToList();
+        }
+
+        //*************
+        //DETAIL TAXTYPE
+        //*************
+        [HttpGet, Route("detail/{id}")]
+        public Entities.MstTax detailTaxType(String id)
+        {
+            var tax = from d in db.MstTaxes
+                       where d.Id == Convert.ToInt32(id)
+                       select new Entities.MstTax
+                       {
+                           Id = d.Id,
+                           Code = d.Code,
+                           Tax = d.Tax,
+                           Rate = d.Rate,
+                           AccountId = d.AccountId
+
+                       };
+            return (Entities.MstTax)tax.FirstOrDefault();
         }
 
         //************
