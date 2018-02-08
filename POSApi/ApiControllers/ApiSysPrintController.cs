@@ -38,7 +38,7 @@ namespace POSApi.ApiControllers
 
                 PrintDocument pd = new PrintDocument();
                 pd.PrintPage += new PrintPageEventHandler(PrintSalesReceipt);
-                ////pd.PrinterSettings = ps;
+                pd.PrinterSettings = ps;
                 pd.Print();
             }
             catch (Exception ex)
@@ -76,9 +76,9 @@ namespace POSApi.ApiControllers
             StringFormat drawFormatLeft = new StringFormat { Alignment = StringAlignment.Near };
             StringFormat drawFormatRight = new StringFormat { Alignment = StringAlignment.Far };
 
-            // ======================
-            // Data / Receipt Content
-            // ======================
+            // ==============================
+            // Data / Receipt Content (Sales)
+            // ==============================
             var sales = from d in db.TrnSales
                         where d.Id == Convert.ToInt32(salesId)
                         select d;
