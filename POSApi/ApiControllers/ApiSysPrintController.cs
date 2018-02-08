@@ -1,204 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-using PrinterUtility;
+using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Web.Http;
+
 namespace POSApi.ApiControllers
 {
-
-
-    //[RoutePrefix("api/print")]
-
-    
-
+    [RoutePrefix("api/print")]
     public class ApiSysPrintController : ApiController
     {
-        [HttpGet, Route("api/print")]
-        public void Print() {
+        // ============
+        // Data Context
+        // ============
+        public Data.posDBDataContext db = new Data.posDBDataContext();
 
-            PrinterUtility.EscPosEpsonCommands.EscPosEpson obj = new PrinterUtility.EscPosEpsonCommands.EscPosEpson();
-            var ByteValue = Encoding.ASCII.GetBytes(string.Empty);
-            // var ByteValue = PrintExtensions.AddBytes(ByteValue, obj.Separator());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.CharSize.DoubleHeight5());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.FontSelect.FontA());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.Alignment.Center());
-            ByteValue = PrintExtensions.AddBytes(ByteValue,Encoding.ASCII.GetBytes("Sample Print\n"));
-            ByteValue = PrintExtensions.AddBytes(ByteValue, Encoding.ASCII.GetBytes("Sample Print\n"));
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.FontSelect.FontA());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.Alignment.Center());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, Encoding.ASCII.GetBytes("Sample POS\n"));
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.CharSize.DoubleWidth4());
-            ByteValue = PrintExtensions.AddBytes(ByteValue, Encoding.ASCII.GetBytes("Jude Gwapo\n"));
-            ByteValue = PrintExtensions.AddBytes(ByteValue, obj.CharSize.Nomarl());
-            //  PrinterUtility.PrintExtensions.Print(ByteValue, "\\\\DESKTOP-35SOPNC\\EPSON TM-T81 Receipt");
-            if (File.Exists(".\\tmpPrint.print"))
-                File.Delete(".\\tmpPrint.print");
-            File.WriteAllBytes(".\\tmpPrint.print", ByteValue);
-            RawPrinterHelper.SendFileToPrinter("EPSON TM-T81 Receipt", ".\\tmpPrint.print");
+        // ================
+        // Global Variables
+        // ================
+        private Int32 salesId = 0;
+
+        // =============
+        // Print Receipt
+        // =============
+        [HttpGet, Route("sales/{id}")]
+        public void PrintSales(String id)
+        {
             try
             {
-                File.Delete(".\\tmpPrint.print");
+                salesId = Convert.ToInt32(id);
+                PrinterSettings ps = new PrinterSettings
+                {
+                    PrinterName = "EPSON TM-T81 Receipt"
+                };
 
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += new PrintPageEventHandler(PrintSalesReceipt);
+                ////pd.PrinterSettings = ps;
+                pd.Print();
             }
-            catch
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex);
             }
-
-
-            //   PrintDocument doc = null;
-
-
-            //doc = new PrintDocument();
-            //PrinterSettings ps = new PrinterSettings();
-            //Font font = new Font("Courier New", 15);
-            //PaperSize psize = new PaperSize("Custom", 100, 200);
-            //doc.Document = doc;
-            //pd.Document.DefaultPageSettings.PaperSize = psize;
-
-            //  public byte[] GetLogo(string LogoPath);
-
-
         }
 
-
-
-
-
-
-
-        public class RawPrinterHelper
+        // ==========
+        // Print Page
+        // ==========
+        public void PrintSalesReceipt(object sender, PrintPageEventArgs ev)
         {
-            // Structure and API declarions:
-            [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-            public class DOCINFOA
+            // =============
+            // Font Settings
+            // =============
+            Font fontArial12Bold = new Font("Arial", 12, FontStyle.Bold);
+            Font fontArial10Regular = new Font("Arial", 10, FontStyle.Regular);
+
+            // =================
+            // Margins and Sizes
+            // =================
+            float x = 10, y = 5;
+            float width = 270.0F, height = 0F;
+
+            // ==============
+            // Brush Settings
+            // ==============
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+            // ==================
+            // Alignment Settings
+            // ==================
+            StringFormat drawFormatCenter = new StringFormat { Alignment = StringAlignment.Center };
+            StringFormat drawFormatLeft = new StringFormat { Alignment = StringAlignment.Near };
+            StringFormat drawFormatRight = new StringFormat { Alignment = StringAlignment.Far };
+
+            // ======================
+            // Data / Receipt Content
+            // ======================
+            var sales = from d in db.TrnSales
+                        where d.Id == Convert.ToInt32(salesId)
+                        select d;
+
+            if (sales.Any())
             {
-                [MarshalAs(UnmanagedType.LPStr)]
-                public string pDocName;
-                [MarshalAs(UnmanagedType.LPStr)]
-                public string pOutputFile;
-                [MarshalAs(UnmanagedType.LPStr)]
-                public string pDataType;
+                String salesNumberText = sales.FirstOrDefault().SalesNumber;
+                ev.Graphics.DrawString(salesNumberText, fontArial12Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatCenter);
+                y += ev.Graphics.MeasureString(salesNumberText, fontArial12Bold).Height;
+
+                String salesDateText = sales.FirstOrDefault().SalesDate.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture);
+                ev.Graphics.DrawString(salesDateText, fontArial10Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatCenter);
+                y += ev.Graphics.MeasureString(salesDateText, fontArial10Regular).Height;
             }
-            [DllImport("winspool.Drv", EntryPoint = "OpenPrinterA", SetLastError = true, CharSet = CharSet.Ansi, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool OpenPrinter([MarshalAs(UnmanagedType.LPStr)]
-string szPrinter, ref IntPtr hPrinter, IntPtr pd);
-
-            [DllImport("winspool.Drv", EntryPoint = "ClosePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool ClosePrinter(IntPtr hPrinter);
-
-            [DllImport("winspool.Drv", EntryPoint = "StartDocPrinterA", SetLastError = true, CharSet = CharSet.Ansi, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool StartDocPrinter(IntPtr hPrinter, Int32 level, [In(), MarshalAs(UnmanagedType.LPStruct)]
-DOCINFOA di);
-
-            [DllImport("winspool.Drv", EntryPoint = "EndDocPrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool EndDocPrinter(IntPtr hPrinter);
-
-            [DllImport("winspool.Drv", EntryPoint = "StartPagePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool StartPagePrinter(IntPtr hPrinter);
-
-            [DllImport("winspool.Drv", EntryPoint = "EndPagePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool EndPagePrinter(IntPtr hPrinter);
-
-            [DllImport("winspool.Drv", EntryPoint = "WritePrinter", SetLastError = true, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
-            public static extern bool WritePrinter(IntPtr hPrinter, IntPtr pBytes, Int32 dwCount, ref Int32 dwWritten);
-
-            // SendBytesToPrinter()
-            // When the function is given a printer name and an unmanaged array
-            // of bytes, the function sends those bytes to the print queue.
-            // Returns true on success, false on failure.
-            public static bool SendBytesToPrinter(string szPrinterName, IntPtr pBytes, Int32 dwCount)
-            {
-                Int32 dwError = 0;
-                Int32 dwWritten = 0;
-                IntPtr hPrinter = new IntPtr(0);
-                DOCINFOA di = new DOCINFOA();
-                bool bSuccess = false;
-                // Assume failure unless you specifically succeed.
-                di.pDocName = "My C#.NET RAW Document";
-                di.pDataType = "RAW";
-
-                // Open the printer.
-                if (OpenPrinter(szPrinterName.Normalize(), ref hPrinter, IntPtr.Zero))
-                {
-                    // Start a document.
-                    if (StartDocPrinter(hPrinter, 1, di))
-                    {
-                        // Start a page.
-                        if (StartPagePrinter(hPrinter))
-                        {
-                            // Write your bytes.
-                            bSuccess = WritePrinter(hPrinter, pBytes, dwCount, ref dwWritten);
-                            EndPagePrinter(hPrinter);
-                        }
-                        EndDocPrinter(hPrinter);
-                    }
-                    ClosePrinter(hPrinter);
-                }
-                // If you did not succeed, GetLastError may give more information
-                // about why not.
-                if (bSuccess == false)
-                {
-                    dwError = Marshal.GetLastWin32Error();
-                }
-                return bSuccess;
-            }
-
-            public static bool SendFileToPrinter(string szPrinterName, string szFileName)
-            {
-                // Open the file.
-                FileStream fs = new FileStream(szFileName, FileMode.Open);
-                // Create a BinaryReader on the file.
-                BinaryReader br = new BinaryReader(fs);
-                // Dim an array of bytes big enough to hold the file's contents.
-                Byte[] bytes = new Byte[fs.Length];
-                bool bSuccess = false;
-                // Your unmanaged pointer.
-                IntPtr pUnmanagedBytes = new IntPtr(0);
-                int nLength = 0;
-
-                nLength = Convert.ToInt32(fs.Length);
-                // Read the contents of the file into the array.
-                bytes = br.ReadBytes(nLength);
-                // Allocate some unmanaged memory for those bytes.
-                pUnmanagedBytes = Marshal.AllocCoTaskMem(nLength);
-                // Copy the managed byte array into the unmanaged array.
-                Marshal.Copy(bytes, 0, pUnmanagedBytes, nLength);
-                // Send the unmanaged bytes to the printer.
-                bSuccess = SendBytesToPrinter(szPrinterName, pUnmanagedBytes, nLength);
-                // Free the unmanaged memory that you allocated earlier.
-                Marshal.FreeCoTaskMem(pUnmanagedBytes);
-                return bSuccess;
-            }
-            public static bool SendStringToPrinter(string szPrinterName, string szString)
-            {
-                IntPtr pBytes = default(IntPtr);
-                Int32 dwCount = default(Int32);
-                // How many characters are in the string?
-                dwCount = szString.Length;
-                // Assume that the printer is expecting ANSI text, and then convert
-                // the string to ANSI text.
-                pBytes = Marshal.StringToCoTaskMemAnsi(szString);
-                // Send the converted ANSI string to the printer.
-                SendBytesToPrinter(szPrinterName, pBytes, dwCount);
-                Marshal.FreeCoTaskMem(pBytes);
-                return true;
-            }
-
-
-
-
         }
-
-        }
+    }
 }
