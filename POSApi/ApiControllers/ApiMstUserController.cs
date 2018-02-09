@@ -23,7 +23,6 @@ namespace POSApi.ApiControllers
                        {
                            Id = d.Id,
                            UserName = d.UserName,
-                           Password = d.Password,
                            FullName = d.FullName,
                            UserCardNumber = d.UserCardNumber,
                            EntryUserId = d.EntryUserId,

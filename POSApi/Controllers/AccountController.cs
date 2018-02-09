@@ -16,6 +16,7 @@ using Microsoft.Owin.Security.OAuth;
 using POSApi.Models;
 using POSApi.Providers;
 using POSApi.Results;
+using System.Linq;
 
 namespace POSApi.Controllers
 {
@@ -125,7 +126,7 @@ namespace POSApi.Controllers
 
             IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword,
                 model.NewPassword);
-            
+
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
@@ -258,9 +259,9 @@ namespace POSApi.Controllers
             if (hasRegistered)
             {
                 Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie);
-                
-                 ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
-                    OAuthDefaults.AuthenticationType);
+
+                ClaimsIdentity oAuthIdentity = await user.GenerateUserIdentityAsync(UserManager,
+                   OAuthDefaults.AuthenticationType);
                 ClaimsIdentity cookieIdentity = await user.GenerateUserIdentityAsync(UserManager,
                     CookieAuthenticationDefaults.AuthenticationType);
 
@@ -328,13 +329,62 @@ namespace POSApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.UserName, Email = model.Email };
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
                 return GetErrorResult(result);
+            }
+
+            // ===============
+            // DB Data Context
+            // ===============
+            Data.posDBDataContext db = new Data.posDBDataContext();
+
+            // ==============================
+            // Get the registered ASP User Id
+            // ==============================
+            string registeredAspUserId = user.Id;
+
+            // ===============
+            // Insert New User
+            // ===============
+            Data.MstUser newUser = new Data.MstUser()
+            {
+                UserName = model.UserName,
+                Password = model.Password,
+                FullName = model.FullName,
+                UserCardNumber = "0",
+                EntryUserId = 0,
+                EntryDateTime = DateTime.Now,
+                UpdateUserId = 0,
+                UpdateDateTime = DateTime.Now,
+                IsLocked = false,
+                AspNetUserId = registeredAspUserId
+            };
+
+            db.MstUsers.InsertOnSubmit(newUser);
+            db.SubmitChanges();
+
+            // ======================
+            // Update Registered User
+            // ======================
+            var mstUsersData = from d in db.MstUsers
+                               where d.Id == newUser.Id
+                               select d;
+
+            if (mstUsersData.Any())
+            {
+                var updateMstUsersData = mstUsersData.FirstOrDefault();
+                updateMstUsersData.EntryUserId = newUser.Id;
+                updateMstUsersData.EntryDateTime = DateTime.Now;
+                updateMstUsersData.UpdateUserId = newUser.Id;
+                updateMstUsersData.UpdateDateTime = DateTime.Now;
+                updateMstUsersData.IsLocked = true;
+
+                db.SubmitChanges();
             }
 
             return Ok();
@@ -368,7 +418,7 @@ namespace POSApi.Controllers
             result = await UserManager.AddLoginAsync(user.Id, info.Login);
             if (!result.Succeeded)
             {
-                return GetErrorResult(result); 
+                return GetErrorResult(result);
             }
             return Ok();
         }
