@@ -47,8 +47,6 @@ namespace POSApi.ApiControllers
             }
         }
 
-
-
         public void PrintSalesReceipt(object sender, PrintPageEventArgs ev)
         {
             // =============
@@ -78,11 +76,17 @@ namespace POSApi.ApiControllers
             Pen blackPen = new Pen(Color.Black, 1);
             Graphics graphics = ev.Graphics;
 
-            // ==============
-            // System Current
-            // ==============
+            
             var systemCurrent = from d in db.SysCurrents
                                 select d;
+
+            var systemCurrent2 = from d in db.MstTerminals
+                                select d;
+
+            // ==============
+            // Defining Invoice Footer
+            // ==============
+            String invoiceFooter;
 
             if (systemCurrent.Any())
             {
@@ -112,19 +116,6 @@ namespace POSApi.ApiControllers
                 graphics.DrawString(companyAddress, fontArial8Regular, Brushes.Black, companyAddressRectangle, drawFormatCenter);
                 y += companyAddressRectangle.Size.Height;
 
-                // ===========
-                // Operated By
-                // ===========
-                String operatedBy = "Operated by: " + systemCurrent.FirstOrDefault().operatedBy;
-                RectangleF operatedByRectangle = new RectangleF
-                {
-                    X = x,
-                    Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(operatedBy, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                };
-                graphics.DrawString(operatedBy, fontArial8Regular, Brushes.Black, operatedByRectangle, drawFormatCenter);
-                y += operatedByRectangle.Size.Height + 5.0F;
-
                 // ==========
                 // TIN Number
                 // ==========
@@ -147,106 +138,99 @@ namespace POSApi.ApiControllers
                 graphics.DrawString(TINData, fontArial8Regular, Brushes.Black, TINDataRectangle, drawFormatLeft);
                 y += TINLabelRectangle.Size.Height;
 
-                // =============
-                // Permit Number
-                // =============
-                String permitNoLabel = "Permit No.:";
-                RectangleF permitNoLabelRectangle = new RectangleF
+
+                // ==========
+                // Invoice Number
+                // ==========
+                String invoiceLabel = "Invoice No.:";
+                RectangleF invoiceLabelRectangle = new RectangleF
                 {
                     X = x,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(permitNoLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(invoiceLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(permitNoLabel, fontArial8Regular, Brushes.Black, permitNoLabelRectangle, drawFormatLeft);
+                graphics.DrawString(invoiceLabel, fontArial8Regular, Brushes.Black, invoiceLabelRectangle, drawFormatLeft);
 
-                String permitNoData = systemCurrent.FirstOrDefault().permitNo;
-                RectangleF permitNoDataRectangle = new RectangleF
+                String invoiceNoData = "EMPTY";
+                RectangleF invoiceNoDataRectangle = new RectangleF
                 {
                     X = 80,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(permitNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(invoiceNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(permitNoData, fontArial8Regular, Brushes.Black, permitNoDataRectangle, drawFormatLeft);
-                y += permitNoLabelRectangle.Size.Height;
+                graphics.DrawString(invoiceNoData, fontArial8Regular, Brushes.Black, invoiceNoDataRectangle, drawFormatLeft);
+                y += invoiceNoDataRectangle.Size.Height;
+
+                // =============
+                // Terminal
+                // =============
+                if (systemCurrent2.Any())
+                {
+                   
+                    String terminalLabel = "Terminal.:";
+                    RectangleF terminalLabelRectangle = new RectangleF
+                    {
+                        X = x,
+                        Y = y,
+                        Size = new Size(270, ((int)graphics.MeasureString(terminalLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    };
+                    graphics.DrawString(terminalLabel, fontArial8Regular, Brushes.Black, terminalLabelRectangle, drawFormatLeft);
+
+                    String terminalNoData = systemCurrent2.FirstOrDefault().Terminal;
+                    RectangleF terminalNoDataRectangle = new RectangleF
+                    {
+                        X = 80,
+                        Y = y,
+                        Size = new Size(270, ((int)graphics.MeasureString(terminalNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    };
+                    graphics.DrawString(terminalNoData, fontArial8Regular, Brushes.Black, terminalNoDataRectangle, drawFormatLeft);
+                    y += terminalNoDataRectangle.Size.Height;
+                }
 
                 // ====================
-                // Accreditation Number
+                // Prepared By
                 // ====================
-                String accrdNoLabel = "Accrd. No.:";
-                RectangleF accrdNoLabelRectangle = new RectangleF
+                String preparedByLabel = "Prepared By.:";
+                RectangleF preparedByLabelRectangle = new RectangleF
                 {
                     X = x,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(accrdNoLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(preparedByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(accrdNoLabel, fontArial8Regular, Brushes.Black, accrdNoLabelRectangle, drawFormatLeft);
+                graphics.DrawString(preparedByLabel, fontArial8Regular, Brushes.Black, preparedByLabelRectangle, drawFormatLeft);
 
-                String accrdNoData = systemCurrent.FirstOrDefault().accreditationNo;
-                RectangleF accrdNoDataRectangle = new RectangleF
+                String preparedByData = "EMPTY";
+                RectangleF preparedByDataRectangle = new RectangleF
                 {
                     X = 80,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(accrdNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(preparedByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(accrdNoData, fontArial8Regular, Brushes.Black, accrdNoDataRectangle, drawFormatLeft);
-                y += accrdNoLabelRectangle.Size.Height;
+                graphics.DrawString(preparedByData, fontArial8Regular, Brushes.Black, preparedByDataRectangle, drawFormatLeft);
+                y += preparedByDataRectangle.Size.Height;
+
 
                 // =============
-                // Serial Number
+                // Transaction Date
                 // =============
-                String serialNoLabel = "Serial No.:";
-                RectangleF serialNoLabelRectangle = new RectangleF
+                String transDateLabel = "Transaction Date.:";
+                RectangleF transDateLabelRectangle = new RectangleF
                 {
                     X = x,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(serialNoLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(transDateLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(serialNoLabel, fontArial8Regular, Brushes.Black, serialNoLabelRectangle, drawFormatLeft);
+                graphics.DrawString(transDateLabel, fontArial8Regular, Brushes.Black, transDateLabelRectangle, drawFormatLeft);
 
-                String serialNoData = systemCurrent.FirstOrDefault().serialNo;
-                RectangleF serialNoDataRectangle = new RectangleF
+                String transDateData = "EMPTY";
+                RectangleF transDateRectangle = new RectangleF
                 {
-                    X = 80,
+                    X = 100,
                     Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(serialNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(270, ((int)graphics.MeasureString(transDateData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(serialNoData, fontArial8Regular, Brushes.Black, serialNoDataRectangle, drawFormatLeft);
-                y += serialNoLabelRectangle.Size.Height;
-
-                // ==============
-                // Machine Number
-                // ==============
-                String machineNoLabel = "Machine No.:";
-                RectangleF machineNoLabelRectangle = new RectangleF
-                {
-                    X = x,
-                    Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(machineNoLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                };
-                graphics.DrawString(machineNoLabel, fontArial8Regular, Brushes.Black, machineNoLabelRectangle, drawFormatLeft);
-
-                String machineNoData = systemCurrent.FirstOrDefault().machineNo;
-                RectangleF machineNoDataRectangle = new RectangleF
-                {
-                    X = 80,
-                    Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(machineNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                };
-                graphics.DrawString(machineNoData, fontArial8Regular, Brushes.Black, machineNoDataRectangle, drawFormatLeft);
-                y += machineNoLabelRectangle.Size.Height + 5.0F;
-
-                // ======================
-                // Official Receipt Title
-                // ======================
-                String officialReceiptTitle = systemCurrent.FirstOrDefault().ORPrintTitle;
-                RectangleF officialReceiptTitleRectangle = new RectangleF
-                {
-                    X = x,
-                    Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(officialReceiptTitle, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                };
-                graphics.DrawString(officialReceiptTitle, fontArial8Regular, Brushes.Black, officialReceiptTitleRectangle, drawFormatCenter);
-                y += officialReceiptTitleRectangle.Size.Height + 5.0F;
+                graphics.DrawString(transDateData, fontArial8Regular, Brushes.Black, transDateRectangle, drawFormatLeft);
+                y += transDateRectangle.Size.Height;     
             }
 
             // ============
@@ -330,7 +314,29 @@ namespace POSApi.ApiControllers
                 graphics.DrawString(totalDiscountAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
                 y += graphics.MeasureString(totalDiscountAmount, fontArial8Bold).Height;
 
-               
+            }
+            // ====================
+            // Line Points Settings
+            // ====================
+            Point thirdLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
+            Point thirdLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
+
+            graphics.DrawLine(blackPen, thirdLineFirstPoint, thirdLineSecondPoint);
+
+            // ======================
+            // Invoice Footer
+            // ======================
+            if (systemCurrent.Any())
+            {
+                invoiceFooter = "\n" + systemCurrent.FirstOrDefault().invoiceFooter;
+                RectangleF invoiceFooterRectangle = new RectangleF
+                {
+                    X = x,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(invoiceFooter, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(invoiceFooter, fontArial8Regular, Brushes.Black, invoiceFooterRectangle, drawFormatCenter);
+                y += invoiceFooterRectangle.Size.Height + 5.0F;
             }
         }
     }
