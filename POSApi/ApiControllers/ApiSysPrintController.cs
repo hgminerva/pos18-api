@@ -33,7 +33,7 @@ namespace POSApi.ApiControllers
                 salesId = Convert.ToInt32(id);
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "EPSON TM-T81 Receipt"
+                    PrinterName = "Microsoft XPS Document Writer"
                 };
 
                 PrintDocument pd = new PrintDocument();
@@ -84,6 +84,11 @@ namespace POSApi.ApiControllers
             // ==============
             var systemCurrent = from d in db.SysCurrents
                                 select d;
+
+            // ==============
+            // Defining Receipt Footer
+            // ==============
+            String receiptFooter = systemCurrent.FirstOrDefault().receiptFooter;
 
             if (systemCurrent.Any())
             {
@@ -248,6 +253,9 @@ namespace POSApi.ApiControllers
                 };
                 graphics.DrawString(officialReceiptTitle, fontArial8Regular, Brushes.Black, officialReceiptTitleRectangle, drawFormatCenter);
                 y += officialReceiptTitleRectangle.Size.Height + 5.0F;
+
+               
+              
             }
 
             // ============
@@ -356,6 +364,32 @@ namespace POSApi.ApiControllers
                 String changeAmount = change.ToString("#,##0.00");
                 graphics.DrawString(changeAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
                 y += graphics.MeasureString(changeAmount, fontArial8Bold).Height;
+
+                graphics.DrawLine(blackPen, firstLineFirstPoint, firstLineSecondPoint);       
+            }
+
+            // ====================
+            // Line Points Settings
+            // ====================
+            Point thirdLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
+            Point thirdLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
+
+            graphics.DrawLine(blackPen, thirdLineFirstPoint, thirdLineSecondPoint);
+
+            // ======================
+            // Receipt Footer
+            // ======================
+            if (systemCurrent.Any())
+            {
+                receiptFooter = "\n" + systemCurrent.FirstOrDefault().receiptFooter;
+                RectangleF receiptFooterRectangle = new RectangleF
+                {
+                    X = x,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(receiptFooter, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(receiptFooter, fontArial8Regular, Brushes.Black, receiptFooterRectangle, drawFormatCenter);
+                y += receiptFooterRectangle.Size.Height + 5.0F;
             }
         }
     }
