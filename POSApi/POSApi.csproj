@@ -194,6 +194,7 @@
     <Compile Include="ApiControllers\ApiMstUnitController.cs" />
     <Compile Include="ApiControllers\ApiMstUserController.cs" />
     <Compile Include="ApiControllers\ApiMstUserFormController.cs" />
+    <Compile Include="ApiControllers\ApiSysPrintKitchenReportController.cs" />
     <Compile Include="ApiControllers\ApiSysPrintOfficialReceiptController.cs" />
     <Compile Include="ApiControllers\ApiSysPrintSalesOrderController.cs" />
     <Compile Include="ApiControllers\ApiTrnCollectionController.cs" />
