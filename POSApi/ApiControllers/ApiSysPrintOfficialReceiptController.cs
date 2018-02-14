@@ -9,8 +9,8 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/print")]
-    public class ApiSysPrintController : ApiController
+    [RoutePrefix("api/print/officialReceipt")]
+    public class ApiSysPrintOfficialReceiptController : ApiController
     {
         // ============
         // Data Context
@@ -26,18 +26,19 @@ namespace POSApi.ApiControllers
         // Print Receipt
         // =============
         [HttpGet, Route("sales/{id}")]
-        public void PrintSales(String id)
+        public void Printer(String id)
         {
             try
             {
                 salesId = Convert.ToInt32(id);
+
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "Microsoft XPS Document Writer"
+                    PrinterName = "EPSON TM-T81 Receipt"
                 };
 
                 PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(PrintSalesReceipt);
+                pd.PrintPage += new PrintPageEventHandler(PrintPage);
                 pd.PrinterSettings = ps;
                 pd.Print();
             }
@@ -50,7 +51,7 @@ namespace POSApi.ApiControllers
         // ==========
         // Print Page
         // ==========
-        public void PrintSalesReceipt(object sender, PrintPageEventArgs ev)
+        public void PrintPage(object sender, PrintPageEventArgs ev)
         {
             // =============
             // Font Settings
@@ -254,8 +255,8 @@ namespace POSApi.ApiControllers
                 graphics.DrawString(officialReceiptTitle, fontArial8Regular, Brushes.Black, officialReceiptTitleRectangle, drawFormatCenter);
                 y += officialReceiptTitleRectangle.Size.Height + 5.0F;
 
-               
-              
+
+
             }
 
             // ============
@@ -365,7 +366,7 @@ namespace POSApi.ApiControllers
                 graphics.DrawString(changeAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
                 y += graphics.MeasureString(changeAmount, fontArial8Bold).Height;
 
-                graphics.DrawLine(blackPen, firstLineFirstPoint, firstLineSecondPoint);       
+                graphics.DrawLine(blackPen, firstLineFirstPoint, firstLineSecondPoint);
             }
 
             // ====================
