@@ -51,6 +51,41 @@ namespace POSApi.ApiControllers
         //******************
         //DETAIL SALES LINE
         //******************
+        [HttpGet, Route("listSalesLineBySalesId/{salesId}")]
+        public TrnSalesLine listSalesLineBySalesId(String salesId)
+        {
+            var sales = from d in db.TrnSalesLines
+                        where d.SalesId == Convert.ToInt32(salesId)
+                        select new Entities.TrnSalesLine
+                        {
+                            Id = d.Id,
+                            SalesId = d.SalesId,
+                            ItemId = d.ItemId,
+                            UnitId = d.UnitId,
+                            Price = d.Price,
+                            DiscountId = d.DiscountId,
+                            DiscountRate = d.DiscountRate,
+                            DiscountAmount = d.DiscountAmount,
+                            NetPrice = d.NetPrice,
+                            Quantity = d.Quantity,
+                            Amount = d.Amount,
+                            TaxId = d.TaxId,
+                            TaxRate = d.TaxRate,
+                            TaxAmount = d.TaxAmount,
+                            SalesAccountId = d.SalesAccountId,
+                            AssetAccountId = d.AssetAccountId,
+                            CostAccountId = d.CostAccountId,
+                            TaxAccountId = d.TaxAccountId,
+                            SalesLineTimeStamp = d.SalesLineTimeStamp,
+                            UserId = d.UserId,
+                            Preparation = d.Preparation,
+                        };
+            return (TrnSalesLine)sales.FirstOrDefault();
+        }
+
+        //******************
+        //DETAIL SALES LINE
+        //******************
         [HttpGet, Route("detail/{id}")]
         public TrnSalesLine detailSalesLine(String id)
         {
