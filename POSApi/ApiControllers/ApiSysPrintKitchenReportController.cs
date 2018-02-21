@@ -12,7 +12,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/print/kitchen1Report")]
+    [RoutePrefix("api/kitchenReport")]
     public class ApiSysPrintKitchenReportController : ApiController
     {
         // ============
@@ -23,197 +23,38 @@ namespace POSApi.ApiControllers
         // ================
         // Global Variables
         // ================
-        private Int32 salesLineId = 0;
+        private Int32 trnSalesLineId = 0;
 
         // ==========
         // Print Page
         // ==========
-        [HttpGet, Route("ketchen1/{id}")]
-        public void Printer(String id)
+        [HttpGet, Route("print/{salesLineId}")]
+        public void PrintKitchenReport(String salesLineId)
         {
             try
             {
-               
-                salesLineId = Convert.ToInt32(id);
+                trnSalesLineId = Convert.ToInt32(salesLineId);
 
-                String defaultPrinter = "EPSON TM-T81 Receipt";
-                String alternativePrinter = "Microsoft XPS Document Writer";
-
-                PrinterSettings defaultPrinterSettings = new PrinterSettings
+                PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = alternativePrinter
+                    PrinterName = "Microsoft XPS Document Writer"
                 };
 
-                //foreach(var avp in GetAvailablePrinters())
-                //{
-                //    Debug.WriteLine(avp + " wawawa");
-                //}
-                
-
-                CheckPrinter();
-               //  GetStatus();
-
-                //PrintDocument pd = new PrintDocument();
-                //pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                //pd.PrinterSettings = defaultPrinterSettings;
-                //pd.Print();
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex + "sasas");
-            }
-        }
-       
-        // ==========
-        // Check Available Printer
-        // ==========
-        [HttpGet, Route("ketchen2/{id}")]
-
-        public void PrinterStatus(String id)
-        {
-
-            string printer1 = "EPSON TM-T81 Receipt";
-            string printer2 = "Microsoft XPS Document Writer";
-            try
-
-            {
-                salesLineId = Convert.ToInt32(id);
-
-                //PrinterSettings printer = new PrinterSettings();
-
-                //printer.PrinterName = printer2;
-                //printer.PrinterName = printer1;
-
-                //if (printer.IsValid) {
-                //    PrintDocument pd = new PrintDocument();
-                //          pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                //           pd.PrinterSettings = printer;
-                //           pd.Print();
-                //}
-
-
-                foreach (string printername in PrinterSettings.InstalledPrinters)
-                {
-                    PrinterSettings printer = new PrinterSettings();
-
-                    printer.PrinterName = printername;
-                    printer1 = printername;
-                    printer2 = printername;
-                    if (printer.IsValid)
-                    {
-                        PrintDocument pd = new PrintDocument();
-                        pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                        pd.PrinterSettings = printer;
-                        pd.Print();
-
-                    }
-
-
-                }
+                PrintDocument pd = new PrintDocument();
+                pd.PrintPage += new PrintPageEventHandler(PrintKitchenReportPage);
+                pd.PrinterSettings = ps;
+                pd.Print();
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
             }
-
-
         }
-
-        private void GetStatus()
-        {
-            string printerName = "";
-            string query = string.Format("SELECT * from Win32_Printer WHERE Name LIKE '%{0}'", printerName);
-
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
-            using (ManagementObjectCollection coll = searcher.Get())
-            {
-                try
-                {
-                    foreach (ManagementObject printer in coll)
-                    {
-                        foreach (PropertyData property in printer.Properties)
-                        {
-                            
-
-                            Debug.WriteLine(string.Format("{0}: {1}", property.Name, property.Value));
-                        }
-                    }
-                }
-                catch (ManagementException ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-            }
-        }
-                  [STAThread]
-        public void CheckPrinter() {
-
-            String defaultPrinter = "EPSON TM-T81 Receipt";
-            String alternativePrinter = "Microsoft XPS Document Writer";
-
-            var server = new LocalPrintServer();
-            PrintQueue queue = server.DefaultPrintQueue;
-            var name = queue.Name;
-            name = defaultPrinter;
-            var isDefault = queue.Name;
-            //   var offline = queue.IsOffline;
-            //  Debug.WriteLine("Default Printer is " + name);
-            //Debug.WriteLine("Is printer Offline? " + offline);
-            if ((isDefault.Equals(defaultPrinter)) && (queue.IsOffline))
-            {
-                Debug.WriteLine("Default Printer is " + name);
-                Debug.WriteLine("Your printer " + name + "  is Offline");
-
-                LocalPrintServer printServer = new LocalPrintServer();
-                PrintQueueCollection printQueuesOnLocalServer = printServer.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
-                List<string> myPrinters = new List<string>();
-
-                foreach (PrintQueue printer in printQueuesOnLocalServer)
-                {
-                    myPrinters.Add(printer.FullName);
-                }
-
-                if (myPrinters.Contains(alternativePrinter) == true)
-                {
-                    PrinterSettings defaultPrinterSettings = new PrinterSettings
-                    {
-                        PrinterName = alternativePrinter
-                    };
-                    PrintDocument pd = new PrintDocument();
-                    pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                    pd.PrinterSettings = defaultPrinterSettings;
-                    pd.Print();
-
-                }
-
-
-            }
-            else
-            {
-                Debug.WriteLine("Default Printer is " + name);
-                Debug.WriteLine("Your printer " + name + "  is Online");
-
-                PrinterSettings defaultPrinterSettings = new PrinterSettings
-                {
-                    PrinterName = defaultPrinter
-                };
-                PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(PrintPage);
-                pd.PrinterSettings = defaultPrinterSettings;
-                pd.Print();
-            }
-
-
-
-          
-
-        }
-        
 
         // ==========
         // Print Page
         // ==========
-        public void PrintPage(object sender, PrintPageEventArgs ev)
+        public void PrintKitchenReportPage(object sender, PrintPageEventArgs ev)
         {
             // =============
             // Font Settings
@@ -242,92 +83,76 @@ namespace POSApi.ApiControllers
             Pen blackPen = new Pen(Color.Black, 1);
             Graphics graphics = ev.Graphics;
 
-            // ============
-            // Sales Header
-            // ============
-            var salesLine = from d in db.TrnSalesLines
-                            where d.Id == Convert.ToInt32(salesLineId)
-                            select d;
-
+            // ==============
+            // System Current
+            // ==============
             var systemCurrent = from d in db.SysCurrents
                                 select d;
 
-            if (salesLine.Any())
+            if (systemCurrent.Any())
             {
+                // ============
+                // Sales Header
+                // ============
+                var salesLine = from d in db.TrnSalesLines
+                                where d.Id == Convert.ToInt32(trnSalesLineId)
+                                select d;
+
                 // ======
                 // Header
                 // ======
-                if (systemCurrent.Any())
+                if (salesLine.Any())
                 {
                     // ============
-                    // Company Name
+                    // Order Number
                     // ============
-                    String companyName = systemCurrent.FirstOrDefault().companyName;
-                    RectangleF companyNameRectangle = new RectangleF
+                    String orderNoLabelData = "Order No: " + salesLine.FirstOrDefault().TrnSale.SalesNumber;
+                    graphics.DrawString(orderNoLabelData, fontArial12Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatCenter);
+                    y += graphics.MeasureString(orderNoLabelData, fontArial12Bold).Height + 5.0F;
+
+                    // ===========
+                    // Prepared By
+                    // ===========
+                    String preparedByLabel = "Prepared By.:";
+                    RectangleF preparedByLabelRectangle = new RectangleF
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(companyName, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(preparedByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(companyName, fontArial8Regular, Brushes.Black, companyNameRectangle, drawFormatCenter);
-                    y += companyNameRectangle.Size.Height;
+                    graphics.DrawString(preparedByLabel, fontArial8Regular, Brushes.Black, preparedByLabelRectangle, drawFormatLeft);
 
-                    // ===============
-                    // Company Address
-                    // ===============
-                    String companyAddress = systemCurrent.FirstOrDefault().address;
-                    RectangleF companyAddressRectangle = new RectangleF
-                    {
-                        X = x,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(companyAddress, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(companyAddress, fontArial8Regular, Brushes.Black, companyAddressRectangle, drawFormatCenter);
-                    y += companyAddressRectangle.Size.Height + 5;
-
-                    // ==========
-                    // TIN Number
-                    // ==========
-                    String TINLabel = "TIN No.:";
-                    RectangleF TINLabelRectangle = new RectangleF
-                    {
-                        X = x,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(TINLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(TINLabel, fontArial8Regular, Brushes.Black, TINLabelRectangle, drawFormatLeft);
-
-                    String TINData = systemCurrent.FirstOrDefault().TIN;
-                    RectangleF TINDataRectangle = new RectangleF
+                    String preparedByData = salesLine.FirstOrDefault().TrnSale.MstUser.FullName;
+                    RectangleF preparedByDataRectangle = new RectangleF
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(TINData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(preparedByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(TINData, fontArial8Regular, Brushes.Black, TINDataRectangle, drawFormatLeft);
-                    y += TINLabelRectangle.Size.Height;
+                    graphics.DrawString(preparedByData, fontArial8Regular, Brushes.Black, preparedByDataRectangle, drawFormatLeft);
+                    y += preparedByDataRectangle.Size.Height;
 
-                    // ==============
-                    // Invoice Number
-                    // ==============
-                    String invoiceLabel = "Invoice No.:";
-                    RectangleF invoiceLabelRectangle = new RectangleF
+                    // ========
+                    // Customer
+                    // ========
+                    String customerLabel = "Customer:";
+                    RectangleF customerLabelRectangle = new RectangleF
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(invoiceLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(customerLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(invoiceLabel, fontArial8Regular, Brushes.Black, invoiceLabelRectangle, drawFormatLeft);
+                    graphics.DrawString(customerLabel, fontArial8Regular, Brushes.Black, customerLabelRectangle, drawFormatLeft);
 
-                    String invoiceNoData = salesLine.FirstOrDefault().TrnSale.SalesNumber;
-                    RectangleF invoiceNoDataRectangle = new RectangleF
+                    String customerData = salesLine.FirstOrDefault().TrnSale.MstCustomer.Customer;
+                    RectangleF customerDataRectangle = new RectangleF
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(invoiceNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(customerData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(invoiceNoData, fontArial8Regular, Brushes.Black, invoiceNoDataRectangle, drawFormatLeft);
-                    y += invoiceNoDataRectangle.Size.Height;
+                    graphics.DrawString(customerData, fontArial8Regular, Brushes.Black, customerDataRectangle, drawFormatLeft);
+                    y += customerDataRectangle.Size.Height;
 
                     // ========
                     // Terminal
@@ -357,27 +182,27 @@ namespace POSApi.ApiControllers
                         y += terminalNoDataRectangle.Size.Height;
                     }
 
-                    // ===========
-                    // Prepared By
-                    // ===========
-                    String preparedByLabel = "Prepared By.:";
-                    RectangleF preparedByLabelRectangle = new RectangleF
+                    // =====
+                    // Table
+                    // =====
+                    String tableLabel = "Table:";
+                    RectangleF tableLabelRectangle = new RectangleF
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(preparedByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(tableLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(preparedByLabel, fontArial8Regular, Brushes.Black, preparedByLabelRectangle, drawFormatLeft);
+                    graphics.DrawString(tableLabel, fontArial8Regular, Brushes.Black, tableLabelRectangle, drawFormatLeft);
 
-                    String preparedByData = salesLine.FirstOrDefault().TrnSale.MstUser.FullName;
-                    RectangleF preparedByDataRectangle = new RectangleF
+                    String tableData = salesLine.FirstOrDefault().TrnSale.MstTable.TableCode;
+                    RectangleF tableDataRectangle = new RectangleF
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(preparedByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(270, ((int)graphics.MeasureString(tableData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                     };
-                    graphics.DrawString(preparedByData, fontArial8Regular, Brushes.Black, preparedByDataRectangle, drawFormatLeft);
-                    y += preparedByDataRectangle.Size.Height;
+                    graphics.DrawString(tableData, fontArial8Regular, Brushes.Black, tableDataRectangle, drawFormatLeft);
+                    y += tableDataRectangle.Size.Height;
 
                     // ================
                     // Transaction Date
@@ -413,11 +238,14 @@ namespace POSApi.ApiControllers
                 String itemLabel = "ITEM";
                 graphics.DrawString(itemLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
 
-                String amountLabel = "AMOUNT";
-                graphics.DrawString(amountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
+                String amountLabel = "Unit";
+                graphics.DrawString(amountLabel, fontArial8Regular, drawBrush, new RectangleF(x + 150.0F, y, width, height), drawFormatLeft);
+
+                String qtyLabel = "Qty.";
+                graphics.DrawString(qtyLabel, fontArial8Regular, drawBrush, new RectangleF(x + 220.0F, y, width, height), drawFormatLeft);
                 y += graphics.MeasureString(itemLabel, fontArial8Regular).Height + 5.0F;
 
-                String itemData = salesLine.FirstOrDefault().MstItem.ItemDescription + "\n" + "**" + salesLine.FirstOrDefault().Quantity.ToString("#,##0.00") + " @ " + salesLine.FirstOrDefault().Price.ToString("#,##0.00") + " - " + salesLine.FirstOrDefault().MstTax.Tax;
+                String itemData = salesLine.FirstOrDefault().MstItem.ItemDescription;
                 RectangleF itemDataRectangle = new RectangleF
                 {
                     X = x,
@@ -426,59 +254,229 @@ namespace POSApi.ApiControllers
                 };
                 graphics.DrawString(itemData, fontArial8Regular, Brushes.Black, itemDataRectangle, drawFormatLeft);
 
-                Decimal totalSales = 0, totalDiscount = 0;
+                String unitData = salesLine.FirstOrDefault().MstItem.MstUnit.Unit;
+                RectangleF unitDataRectangle = new RectangleF
+                {
+                    X = x + 150.0F,
+                    Y = y,
+                    Size = new Size(150, ((int)graphics.MeasureString(unitData, fontArial8Regular, 150, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(unitData, fontArial8Regular, Brushes.Black, unitDataRectangle, drawFormatLeft);
 
-                String itemAmountData = salesLine.FirstOrDefault().Amount.ToString("#,##0.00");
-                graphics.DrawString(itemAmountData, fontArial8Regular, drawBrush, new RectangleF(x, y, 270.0F, height), drawFormatRight);
-                y += itemDataRectangle.Size.Height + 5.0F;
-
-                totalSales += salesLine.FirstOrDefault().Amount;
-                totalDiscount += salesLine.FirstOrDefault().DiscountAmount;
+                String qtyData = salesLine.FirstOrDefault().Quantity.ToString("#,##0.00");
+                RectangleF qtyDataRectangle = new RectangleF
+                {
+                    X = x + 100.0F,
+                    Y = y,
+                    Size = new Size(150, ((int)graphics.MeasureString(qtyData, fontArial8Regular, 150, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(qtyData, fontArial8Regular, Brushes.Black, qtyDataRectangle, drawFormatRight);
+                y += qtyDataRectangle.Size.Height + 15.0F;
 
                 Point secondLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
                 Point secondLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
 
                 graphics.DrawLine(blackPen, secondLineFirstPoint, secondLineSecondPoint);
 
-                String totalSalesLabel = "\nTOTAL SALES";
-                graphics.DrawString(totalSalesLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
-
-                String totalSalesAmount = "\n" + totalSales.ToString("#,##0.00");
-                graphics.DrawString(totalSalesAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
-                y += graphics.MeasureString(totalSalesAmount, fontArial8Bold).Height;
-
-                String totalDiscountLabel = "TOTAL DISCOUNT";
-                graphics.DrawString(totalDiscountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
-
-                String totalDiscountAmount = totalDiscount.ToString("#,##0.00");
-                graphics.DrawString(totalDiscountAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
-                y += graphics.MeasureString(totalDiscountAmount, fontArial8Bold).Height;
-            }
-
-            // ====================
-            // Line Points Settings
-            // ====================
-            Point thirdLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
-            Point thirdLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
-
-            graphics.DrawLine(blackPen, thirdLineFirstPoint, thirdLineSecondPoint);
-
-            // ==============
-            // Invoice Footer
-            // ==============
-            if (systemCurrent.Any())
-            {
-                String invoiceFooter = "\n" + systemCurrent.FirstOrDefault().invoiceFooter;
-                RectangleF invoiceFooterRectangle = new RectangleF
+                // ========
+                // Customer
+                // ========
+                String orderByLabel = "Order By:";
+                RectangleF orderByLabelRectangle = new RectangleF
                 {
                     X = x,
-                    Y = y,
-                    Size = new Size(270, ((int)graphics.MeasureString(invoiceFooter, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Y = y + 15F,
+                    Size = new Size(270, ((int)graphics.MeasureString(orderByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
                 };
-                graphics.DrawString(invoiceFooter, fontArial8Regular, Brushes.Black, invoiceFooterRectangle, drawFormatCenter);
-                y += invoiceFooterRectangle.Size.Height + 5.0F;
+                graphics.DrawString(orderByLabel, fontArial8Regular, Brushes.Black, orderByLabelRectangle, drawFormatLeft);
+
+                String orderByData = salesLine.FirstOrDefault().TrnSale.MstUser.FullName;
+                RectangleF orderByDataRectangle = new RectangleF
+                {
+                    X = 120,
+                    Y = y + 15F,
+                    Size = new Size(270, ((int)graphics.MeasureString(orderByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(orderByData, fontArial8Regular, Brushes.Black, orderByDataRectangle, drawFormatLeft);
+                y += orderByDataRectangle.Size.Height;
             }
         }
-    }
 
+        // ==========
+        // Print Page
+        // ==========
+        //public void PrinterPage(String id)
+        //{
+        //    try
+        //    {
+        //        salesLineId = Convert.ToInt32(id);
+
+        //        String defaultPrinter = "EPSON TM-T81 Receipt";
+        //        String alternativePrinter = "Microsoft XPS Document Writer";
+
+        //        PrinterSettings defaultPrinterSettings = new PrinterSettings
+        //        {
+        //            PrinterName = alternativePrinter
+        //        };
+
+        //        //foreach(var avp in GetAvailablePrinters())
+        //        //{
+        //        //    Debug.WriteLine(avp + " wawawa");
+        //        //}
+
+
+        //        CheckPrinter();
+        //        //  GetStatus();
+
+        //        //PrintDocument pd = new PrintDocument();
+        //        //pd.PrintPage += new PrintPageEventHandler(PrintPage);
+        //        //pd.PrinterSettings = defaultPrinterSettings;
+        //        //pd.Print();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex + "sasas");
+        //    }
+        //}
+
+        //// ==========
+        //// Check Available Printer
+        //// ==========
+        //public void PrinterStatus(String id)
+        //{
+
+        //    string printer1 = "EPSON TM-T81 Receipt";
+        //    string printer2 = "Microsoft XPS Document Writer";
+        //    try
+
+        //    {
+        //        salesLineId = Convert.ToInt32(id);
+
+        //        //PrinterSettings printer = new PrinterSettings();
+
+        //        //printer.PrinterName = printer2;
+        //        //printer.PrinterName = printer1;
+
+        //        //if (printer.IsValid) {
+        //        //    PrintDocument pd = new PrintDocument();
+        //        //          pd.PrintPage += new PrintPageEventHandler(PrintPage);
+        //        //           pd.PrinterSettings = printer;
+        //        //           pd.Print();
+        //        //}
+
+
+        //        foreach (string printername in PrinterSettings.InstalledPrinters)
+        //        {
+        //            PrinterSettings printer = new PrinterSettings();
+
+        //            printer.PrinterName = printername;
+        //            printer1 = printername;
+        //            printer2 = printername;
+        //            if (printer.IsValid)
+        //            {
+        //                PrintDocument pd = new PrintDocument();
+        //                pd.PrintPage += new PrintPageEventHandler(PrintPage);
+        //                pd.PrinterSettings = printer;
+        //                pd.Print();
+
+        //            }
+
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //    }
+
+
+        //}
+
+        //private void GetStatus()
+        //{
+        //    string printerName = "";
+        //    string query = string.Format("SELECT * from Win32_Printer WHERE Name LIKE '%{0}'", printerName);
+
+        //    using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(query))
+        //    using (ManagementObjectCollection coll = searcher.Get())
+        //    {
+        //        try
+        //        {
+        //            foreach (ManagementObject printer in coll)
+        //            {
+        //                foreach (PropertyData property in printer.Properties)
+        //                {
+
+
+        //                    Debug.WriteLine(string.Format("{0}: {1}", property.Name, property.Value));
+        //                }
+        //            }
+        //        }
+        //        catch (ManagementException ex)
+        //        {
+        //            Debug.WriteLine(ex.Message);
+        //        }
+        //    }
+        //}
+
+        //[STAThread]
+        //public void CheckPrinter()
+        //{
+
+        //    String defaultPrinter = "EPSON TM-T81 Receipt";
+        //    String alternativePrinter = "Microsoft XPS Document Writer";
+
+        //    var server = new LocalPrintServer();
+        //    PrintQueue queue = server.DefaultPrintQueue;
+        //    var name = queue.Name;
+        //    name = defaultPrinter;
+        //    var isDefault = queue.Name;
+        //    //   var offline = queue.IsOffline;
+        //    //  Debug.WriteLine("Default Printer is " + name);
+        //    //Debug.WriteLine("Is printer Offline? " + offline);
+        //    if ((isDefault.Equals(defaultPrinter)) && (queue.IsOffline))
+        //    {
+        //        Debug.WriteLine("Default Printer is " + name);
+        //        Debug.WriteLine("Your printer " + name + "  is Offline");
+
+        //        LocalPrintServer printServer = new LocalPrintServer();
+        //        PrintQueueCollection printQueuesOnLocalServer = printServer.GetPrintQueues(new[] { EnumeratedPrintQueueTypes.Local, EnumeratedPrintQueueTypes.Connections });
+        //        List<string> myPrinters = new List<string>();
+
+        //        foreach (PrintQueue printer in printQueuesOnLocalServer)
+        //        {
+        //            myPrinters.Add(printer.FullName);
+        //        }
+
+        //        if (myPrinters.Contains(alternativePrinter) == true)
+        //        {
+        //            PrinterSettings defaultPrinterSettings = new PrinterSettings
+        //            {
+        //                PrinterName = alternativePrinter
+        //            };
+        //            PrintDocument pd = new PrintDocument();
+        //            pd.PrintPage += new PrintPageEventHandler(PrintPage);
+        //            pd.PrinterSettings = defaultPrinterSettings;
+        //            pd.Print();
+
+        //        }
+
+
+        //    }
+        //    else
+        //    {
+        //        Debug.WriteLine("Default Printer is " + name);
+        //        Debug.WriteLine("Your printer " + name + "  is Online");
+
+        //        PrinterSettings defaultPrinterSettings = new PrinterSettings
+        //        {
+        //            PrinterName = defaultPrinter
+        //        };
+        //        PrintDocument pd = new PrintDocument();
+        //        pd.PrintPage += new PrintPageEventHandler(PrintPage);
+        //        pd.PrinterSettings = defaultPrinterSettings;
+        //        pd.Print();
+        //    }
+        //}
+    }
 }

@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/print/officialReceipt")]
+    [RoutePrefix("api/officialReceipt")]
     public class ApiSysPrintOfficialReceiptController : ApiController
     {
         // ============
@@ -20,25 +20,25 @@ namespace POSApi.ApiControllers
         // ================
         // Global Variables
         // ================
-        private Int32 salesId = 0;
+        private Int32 trnSalesId = 0;
 
         // =============
         // Print Receipt
         // =============
-        [HttpGet, Route("sales/{id}")]
-        public void Printer(String id)
+        [HttpGet, Route("print/{salesId}")]
+        public void PrintOfficialReceipt(String salesId)
         {
             try
             {
-                salesId = Convert.ToInt32(id);
+                trnSalesId = Convert.ToInt32(salesId);
 
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "EPSON TM-T81 Receipt"
+                    PrinterName = "Microsoft XPS Document Writer"
                 };
 
                 PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(PrintPage);
+                pd.PrintPage += new PrintPageEventHandler(PrintOfficialReceiptPage);
                 pd.PrinterSettings = ps;
                 pd.Print();
             }
@@ -51,7 +51,7 @@ namespace POSApi.ApiControllers
         // ==========
         // Print Page
         // ==========
-        public void PrintPage(object sender, PrintPageEventArgs ev)
+        public void PrintOfficialReceiptPage(object sender, PrintPageEventArgs ev)
         {
             // =============
             // Font Settings
@@ -254,16 +254,13 @@ namespace POSApi.ApiControllers
                 };
                 graphics.DrawString(officialReceiptTitle, fontArial8Regular, Brushes.Black, officialReceiptTitleRectangle, drawFormatCenter);
                 y += officialReceiptTitleRectangle.Size.Height + 5.0F;
-
-
-
             }
 
             // ============
             // Sales Header
             // ============
             var sales = from d in db.TrnSales
-                        where d.Id == Convert.ToInt32(salesId)
+                        where d.Id == Convert.ToInt32(trnSalesId)
                         select d;
 
             if (sales.Any())

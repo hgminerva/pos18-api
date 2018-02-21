@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace POSApi.ApiControllers
 {
-    [RoutePrefix("api/print/salesOrder")]
+    [RoutePrefix("api/salesOrder")]
     public class ApiSysPrintSalesOrderController : ApiController
     {
         // ============
@@ -20,25 +20,25 @@ namespace POSApi.ApiControllers
         // ================
         // Global Variables
         // ================
-        private Int32 salesLineId = 0;
+        private Int32 trnSalesId = 0;
 
-        // ==========
-        // Print Page
-        // ==========
-        [HttpGet, Route("sales/{id}")]
-        public void Printer(String id)
+        // =================
+        // Print Sales Order
+        // =================
+        [HttpGet, Route("print/{salesId}")]
+        public void PrintSalesOrder(String salesId)
         {
             try
             {
-                salesLineId = Convert.ToInt32(id);
+                trnSalesId = Convert.ToInt32(salesId);
 
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "EPSON TM-T81 Receipt"
+                    PrinterName = "Microsoft XPS Document Writer"
                 };
 
                 PrintDocument pd = new PrintDocument();
-                pd.PrintPage += new PrintPageEventHandler(PrintPage);
+                pd.PrintPage += new PrintPageEventHandler(PrintSalesOrderPage);
                 pd.PrinterSettings = ps;
                 pd.Print();
             }
@@ -51,7 +51,7 @@ namespace POSApi.ApiControllers
         // ==========
         // Print Page
         // ==========
-        public void PrintPage(object sender, PrintPageEventArgs ev)
+        public void PrintSalesOrderPage(object sender, PrintPageEventArgs ev)
         {
             // =============
             // Font Settings
@@ -80,71 +80,74 @@ namespace POSApi.ApiControllers
             Pen blackPen = new Pen(Color.Black, 1);
             Graphics graphics = ev.Graphics;
 
-            // ============
-            // Sales Header
-            // ============
-            var salesLine = from d in db.TrnSalesLines
-                            where d.Id == Convert.ToInt32(salesLineId)
-                            select d;
-
+            // ==============
+            // System Current
+            // ==============
             var systemCurrent = from d in db.SysCurrents
                                 select d;
 
-            if (salesLine.Any())
+            // ======
+            // Header
+            // ======
+            if (systemCurrent.Any())
             {
-                // ======
-                // Header
-                // ======
-                if (systemCurrent.Any())
+                // ============
+                // Company Name
+                // ============
+                String companyName = systemCurrent.FirstOrDefault().companyName;
+                RectangleF companyNameRectangle = new RectangleF
                 {
-                    // ============
-                    // Company Name
-                    // ============
-                    String companyName = systemCurrent.FirstOrDefault().companyName;
-                    RectangleF companyNameRectangle = new RectangleF
-                    {
-                        X = x,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(companyName, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(companyName, fontArial8Regular, Brushes.Black, companyNameRectangle, drawFormatCenter);
-                    y += companyNameRectangle.Size.Height;
+                    X = x,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(companyName, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(companyName, fontArial8Regular, Brushes.Black, companyNameRectangle, drawFormatCenter);
+                y += companyNameRectangle.Size.Height;
 
-                    // ===============
-                    // Company Address
-                    // ===============
-                    String companyAddress = systemCurrent.FirstOrDefault().address;
-                    RectangleF companyAddressRectangle = new RectangleF
-                    {
-                        X = x,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(companyAddress, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(companyAddress, fontArial8Regular, Brushes.Black, companyAddressRectangle, drawFormatCenter);
-                    y += companyAddressRectangle.Size.Height + 5;
+                // ===============
+                // Company Address
+                // ===============
+                String companyAddress = systemCurrent.FirstOrDefault().address;
+                RectangleF companyAddressRectangle = new RectangleF
+                {
+                    X = x,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(companyAddress, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(companyAddress, fontArial8Regular, Brushes.Black, companyAddressRectangle, drawFormatCenter);
+                y += companyAddressRectangle.Size.Height + 5;
 
-                    // ==========
-                    // TIN Number
-                    // ==========
-                    String TINLabel = "TIN No.:";
-                    RectangleF TINLabelRectangle = new RectangleF
-                    {
-                        X = x,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(TINLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(TINLabel, fontArial8Regular, Brushes.Black, TINLabelRectangle, drawFormatLeft);
+                // ==========
+                // TIN Number
+                // ==========
+                String TINLabel = "TIN No.:";
+                RectangleF TINLabelRectangle = new RectangleF
+                {
+                    X = x,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(TINLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(TINLabel, fontArial8Regular, Brushes.Black, TINLabelRectangle, drawFormatLeft);
 
-                    String TINData = systemCurrent.FirstOrDefault().TIN;
-                    RectangleF TINDataRectangle = new RectangleF
-                    {
-                        X = 120,
-                        Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(TINData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
-                    };
-                    graphics.DrawString(TINData, fontArial8Regular, Brushes.Black, TINDataRectangle, drawFormatLeft);
-                    y += TINLabelRectangle.Size.Height;
+                String TINData = systemCurrent.FirstOrDefault().TIN;
+                RectangleF TINDataRectangle = new RectangleF
+                {
+                    X = 120,
+                    Y = y,
+                    Size = new Size(270, ((int)graphics.MeasureString(TINData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                };
+                graphics.DrawString(TINData, fontArial8Regular, Brushes.Black, TINDataRectangle, drawFormatLeft);
+                y += TINLabelRectangle.Size.Height;
 
+                // ============
+                // Sales Header
+                // ============
+                var sales = from d in db.TrnSales
+                            where d.Id == Convert.ToInt32(trnSalesId)
+                            select d;
+
+                if (sales.Any())
+                {
                     // ==============
                     // Invoice Number
                     // ==============
@@ -157,7 +160,7 @@ namespace POSApi.ApiControllers
                     };
                     graphics.DrawString(invoiceLabel, fontArial8Regular, Brushes.Black, invoiceLabelRectangle, drawFormatLeft);
 
-                    String invoiceNoData = salesLine.FirstOrDefault().TrnSale.SalesNumber;
+                    String invoiceNoData = sales.FirstOrDefault().SalesNumber;
                     RectangleF invoiceNoDataRectangle = new RectangleF
                     {
                         X = 120,
@@ -207,7 +210,7 @@ namespace POSApi.ApiControllers
                     };
                     graphics.DrawString(preparedByLabel, fontArial8Regular, Brushes.Black, preparedByLabelRectangle, drawFormatLeft);
 
-                    String preparedByData = salesLine.FirstOrDefault().TrnSale.MstUser.FullName;
+                    String preparedByData = sales.FirstOrDefault().MstUser.FullName;
                     RectangleF preparedByDataRectangle = new RectangleF
                     {
                         X = 120,
@@ -229,7 +232,7 @@ namespace POSApi.ApiControllers
                     };
                     graphics.DrawString(transDateLabel, fontArial8Regular, Brushes.Black, transDateLabelRectangle, drawFormatLeft);
 
-                    String transactionDateData = salesLine.FirstOrDefault().TrnSale.SalesDate.ToString("MM-dd-yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+                    String transactionDateData = sales.FirstOrDefault().SalesDate.ToString("MM-dd-yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
                     RectangleF transDateRectangle = new RectangleF
                     {
                         X = 120,
@@ -238,59 +241,74 @@ namespace POSApi.ApiControllers
                     };
                     graphics.DrawString(transactionDateData, fontArial8Regular, Brushes.Black, transDateRectangle, drawFormatLeft);
                     y += transDateRectangle.Size.Height + 20;
+
+                    // ============
+                    // Sales Header
+                    // ============
+                    var salesLines = from d in db.TrnSalesLines
+                                     where d.SalesId == Convert.ToInt32(sales.FirstOrDefault().Id)
+                                     select d;
+
+                    if (salesLines.Any())
+                    {
+                        // ====================
+                        // Line Points Settings
+                        // ====================
+                        Point firstLineFirstPoint = new Point(0, Convert.ToInt32(y) - 9);
+                        Point firstLineSecondPoint = new Point(500, Convert.ToInt32(y) - 9);
+
+                        graphics.DrawLine(blackPen, firstLineFirstPoint, firstLineSecondPoint);
+
+                        String itemLabel = "ITEM";
+                        graphics.DrawString(itemLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
+
+                        String amountLabel = "AMOUNT";
+                        graphics.DrawString(amountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
+                        y += graphics.MeasureString(itemLabel, fontArial8Regular).Height + 5.0F;
+
+                        Decimal totalSales = 0, totalDiscount = 0;
+                        if (salesLines.Any())
+                        {
+                            foreach (var salesLine in salesLines)
+                            {
+                                String itemData = salesLine.MstItem.ItemDescription + "\n" + "**" + salesLine.Quantity.ToString("#,##0.00") + " @ " + salesLine.Price.ToString("#,##0.00") + " - " + salesLine.MstTax.Tax;
+                                RectangleF itemDataRectangle = new RectangleF
+                                {
+                                    X = x,
+                                    Y = y,
+                                    Size = new Size(150, ((int)graphics.MeasureString(itemData, fontArial8Regular, 150, StringFormat.GenericTypographic).Height))
+                                };
+                                graphics.DrawString(itemData, fontArial8Regular, Brushes.Black, itemDataRectangle, drawFormatLeft);
+
+                                String itemAmountData = salesLine.Amount.ToString("#,##0.00");
+                                graphics.DrawString(itemAmountData, fontArial8Regular, drawBrush, new RectangleF(x, y, 270.0F, height), drawFormatRight);
+                                y += itemDataRectangle.Size.Height + 5.0F;
+
+                                totalSales += salesLine.Amount;
+                                totalDiscount += salesLine.DiscountAmount;
+                            }
+                        }
+
+                        Point secondLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
+                        Point secondLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
+
+                        graphics.DrawLine(blackPen, secondLineFirstPoint, secondLineSecondPoint);
+
+                        String totalSalesLabel = "\nTOTAL SALES";
+                        graphics.DrawString(totalSalesLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
+
+                        String totalSalesAmount = "\n" + totalSales.ToString("#,##0.00");
+                        graphics.DrawString(totalSalesAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
+                        y += graphics.MeasureString(totalSalesAmount, fontArial8Bold).Height;
+
+                        String totalDiscountLabel = "TOTAL DISCOUNT";
+                        graphics.DrawString(totalDiscountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
+
+                        String totalDiscountAmount = totalDiscount.ToString("#,##0.00");
+                        graphics.DrawString(totalDiscountAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
+                        y += graphics.MeasureString(totalDiscountAmount, fontArial8Bold).Height;
+                    }
                 }
-
-                // ====================
-                // Line Points Settings
-                // ====================
-                Point firstLineFirstPoint = new Point(0, Convert.ToInt32(y) - 9);
-                Point firstLineSecondPoint = new Point(500, Convert.ToInt32(y) - 9);
-
-                graphics.DrawLine(blackPen, firstLineFirstPoint, firstLineSecondPoint);
-
-                String itemLabel = "ITEM";
-                graphics.DrawString(itemLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
-
-                String amountLabel = "AMOUNT";
-                graphics.DrawString(amountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
-                y += graphics.MeasureString(itemLabel, fontArial8Regular).Height + 5.0F;
-
-                String itemData = salesLine.FirstOrDefault().MstItem.ItemDescription + "\n" + "**" + salesLine.FirstOrDefault().Quantity.ToString("#,##0.00") + " @ " + salesLine.FirstOrDefault().Price.ToString("#,##0.00") + " - " + salesLine.FirstOrDefault().MstTax.Tax;
-                RectangleF itemDataRectangle = new RectangleF
-                {
-                    X = x,
-                    Y = y,
-                    Size = new Size(150, ((int)graphics.MeasureString(itemData, fontArial8Regular, 150, StringFormat.GenericTypographic).Height))
-                };
-                graphics.DrawString(itemData, fontArial8Regular, Brushes.Black, itemDataRectangle, drawFormatLeft);
-
-                Decimal totalSales = 0, totalDiscount = 0;
-
-                String itemAmountData = salesLine.FirstOrDefault().Amount.ToString("#,##0.00");
-                graphics.DrawString(itemAmountData, fontArial8Regular, drawBrush, new RectangleF(x, y, 270.0F, height), drawFormatRight);
-                y += itemDataRectangle.Size.Height + 5.0F;
-
-                totalSales += salesLine.FirstOrDefault().Amount;
-                totalDiscount += salesLine.FirstOrDefault().DiscountAmount;
-
-                Point secondLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
-                Point secondLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
-
-                graphics.DrawLine(blackPen, secondLineFirstPoint, secondLineSecondPoint);
-
-                String totalSalesLabel = "\nTOTAL SALES";
-                graphics.DrawString(totalSalesLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
-
-                String totalSalesAmount = "\n" + totalSales.ToString("#,##0.00");
-                graphics.DrawString(totalSalesAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
-                y += graphics.MeasureString(totalSalesAmount, fontArial8Bold).Height;
-
-                String totalDiscountLabel = "TOTAL DISCOUNT";
-                graphics.DrawString(totalDiscountLabel, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
-
-                String totalDiscountAmount = totalDiscount.ToString("#,##0.00");
-                graphics.DrawString(totalDiscountAmount, fontArial8Bold, drawBrush, new RectangleF(x, y, width, height), drawFormatRight);
-                y += graphics.MeasureString(totalDiscountAmount, fontArial8Bold).Height;
             }
 
             // ====================
