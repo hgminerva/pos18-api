@@ -34,7 +34,7 @@ namespace POSApi.ApiControllers
 
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "Microsoft XPS Document Writer"
+                    PrinterName = "EPSON TM-T81 Receipt"
                 };
 
                 PrintDocument pd = new PrintDocument();
