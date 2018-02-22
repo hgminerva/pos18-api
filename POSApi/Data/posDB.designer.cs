@@ -123,6 +123,9 @@ namespace POSApi.Data
     partial void InsertSysForm(SysForm instance);
     partial void UpdateSysForm(SysForm instance);
     partial void DeleteSysForm(SysForm instance);
+    partial void InsertSysPrinter(SysPrinter instance);
+    partial void UpdateSysPrinter(SysPrinter instance);
+    partial void DeleteSysPrinter(SysPrinter instance);
     partial void InsertSysSalesLocked(SysSalesLocked instance);
     partial void UpdateSysSalesLocked(SysSalesLocked instance);
     partial void DeleteSysSalesLocked(SysSalesLocked instance);
@@ -454,6 +457,14 @@ namespace POSApi.Data
 			get
 			{
 				return this.GetTable<SysForm>();
+			}
+		}
+		
+		public System.Data.Linq.Table<SysPrinter> SysPrinters
+		{
+			get
+			{
+				return this.GetTable<SysPrinter>();
 			}
 		}
 		
@@ -14807,6 +14818,260 @@ namespace POSApi.Data
 					this._FormDescription = value;
 					this.SendPropertyChanged("FormDescription");
 					this.OnFormDescriptionChanged();
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.SysPrinter")]
+	public partial class SysPrinter : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _PaperType;
+		
+		private string _Printer;
+		
+		private decimal _PaperSize;
+		
+		private decimal _Orientation;
+		
+		private decimal _LeftMargin;
+		
+		private decimal _RightMargin;
+		
+		private decimal _TopMargin;
+		
+		private decimal _BotMargin;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnPaperTypeChanging(string value);
+    partial void OnPaperTypeChanged();
+    partial void OnPrinterChanging(string value);
+    partial void OnPrinterChanged();
+    partial void OnPaperSizeChanging(decimal value);
+    partial void OnPaperSizeChanged();
+    partial void OnOrientationChanging(decimal value);
+    partial void OnOrientationChanged();
+    partial void OnLeftMarginChanging(decimal value);
+    partial void OnLeftMarginChanged();
+    partial void OnRightMarginChanging(decimal value);
+    partial void OnRightMarginChanged();
+    partial void OnTopMarginChanging(decimal value);
+    partial void OnTopMarginChanged();
+    partial void OnBotMarginChanging(decimal value);
+    partial void OnBotMarginChanged();
+    #endregion
+		
+		public SysPrinter()
+		{
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaperType", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string PaperType
+		{
+			get
+			{
+				return this._PaperType;
+			}
+			set
+			{
+				if ((this._PaperType != value))
+				{
+					this.OnPaperTypeChanging(value);
+					this.SendPropertyChanging();
+					this._PaperType = value;
+					this.SendPropertyChanged("PaperType");
+					this.OnPaperTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Printer", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string Printer
+		{
+			get
+			{
+				return this._Printer;
+			}
+			set
+			{
+				if ((this._Printer != value))
+				{
+					this.OnPrinterChanging(value);
+					this.SendPropertyChanging();
+					this._Printer = value;
+					this.SendPropertyChanged("Printer");
+					this.OnPrinterChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PaperSize", DbType="Decimal(18,5) NOT NULL")]
+		public decimal PaperSize
+		{
+			get
+			{
+				return this._PaperSize;
+			}
+			set
+			{
+				if ((this._PaperSize != value))
+				{
+					this.OnPaperSizeChanging(value);
+					this.SendPropertyChanging();
+					this._PaperSize = value;
+					this.SendPropertyChanged("PaperSize");
+					this.OnPaperSizeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Orientation", DbType="Decimal(18,5) NOT NULL")]
+		public decimal Orientation
+		{
+			get
+			{
+				return this._Orientation;
+			}
+			set
+			{
+				if ((this._Orientation != value))
+				{
+					this.OnOrientationChanging(value);
+					this.SendPropertyChanging();
+					this._Orientation = value;
+					this.SendPropertyChanged("Orientation");
+					this.OnOrientationChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LeftMargin", DbType="Decimal(18,5) NOT NULL")]
+		public decimal LeftMargin
+		{
+			get
+			{
+				return this._LeftMargin;
+			}
+			set
+			{
+				if ((this._LeftMargin != value))
+				{
+					this.OnLeftMarginChanging(value);
+					this.SendPropertyChanging();
+					this._LeftMargin = value;
+					this.SendPropertyChanged("LeftMargin");
+					this.OnLeftMarginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RightMargin", DbType="Decimal(18,5) NOT NULL")]
+		public decimal RightMargin
+		{
+			get
+			{
+				return this._RightMargin;
+			}
+			set
+			{
+				if ((this._RightMargin != value))
+				{
+					this.OnRightMarginChanging(value);
+					this.SendPropertyChanging();
+					this._RightMargin = value;
+					this.SendPropertyChanged("RightMargin");
+					this.OnRightMarginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TopMargin", DbType="Decimal(18,5) NOT NULL")]
+		public decimal TopMargin
+		{
+			get
+			{
+				return this._TopMargin;
+			}
+			set
+			{
+				if ((this._TopMargin != value))
+				{
+					this.OnTopMarginChanging(value);
+					this.SendPropertyChanging();
+					this._TopMargin = value;
+					this.SendPropertyChanged("TopMargin");
+					this.OnTopMarginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BotMargin", DbType="Decimal(18,5) NOT NULL")]
+		public decimal BotMargin
+		{
+			get
+			{
+				return this._BotMargin;
+			}
+			set
+			{
+				if ((this._BotMargin != value))
+				{
+					this.OnBotMarginChanging(value);
+					this.SendPropertyChanging();
+					this._BotMargin = value;
+					this.SendPropertyChanged("BotMargin");
+					this.OnBotMarginChanged();
 				}
 			}
 		}

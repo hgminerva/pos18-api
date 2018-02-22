@@ -618,6 +618,19 @@
       <Column Name="FormDescription" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
     </Type>
   </Table>
+  <Table Name="dbo.SysPrinter" Member="SysPrinters">
+    <Type Name="SysPrinter">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="PaperType" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Printer" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="PaperSize" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+      <Column Name="Orientation" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+      <Column Name="LeftMargin" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+      <Column Name="RightMargin" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+      <Column Name="TopMargin" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+      <Column Name="BotMargin" Type="System.Decimal" DbType="Decimal(18,5) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
   <Table Name="dbo.SysSalesLocked" Member="SysSalesLockeds">
     <Type Name="SysSalesLocked">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

@@ -52,7 +52,7 @@ namespace POSApi.ApiControllers
         //DETAIL SALES LINE
         //******************
         [HttpGet, Route("listSalesLineBySalesId/{salesId}")]
-        public TrnSalesLine listSalesLineBySalesId(String salesId)
+        public List<TrnSalesLine> listSalesLineBySalesId(String salesId)
         {
             var sales = from d in db.TrnSalesLines
                         where d.SalesId == Convert.ToInt32(salesId)
@@ -80,7 +80,8 @@ namespace POSApi.ApiControllers
                             UserId = d.UserId,
                             Preparation = d.Preparation,
                         };
-            return (TrnSalesLine)sales.FirstOrDefault();
+
+            return sales.ToList();
         }
 
         //******************
@@ -90,42 +91,7 @@ namespace POSApi.ApiControllers
         public TrnSalesLine detailSalesLine(String id)
         {
             var sales = from d in db.TrnSalesLines
-                         where d.Id == Convert.ToInt32(id)
-                          select new Entities.TrnSalesLine
-                          {
-                              Id = d.Id,
-                              SalesId = d.SalesId,
-                              ItemId = d.ItemId,
-                              UnitId = d.UnitId,
-                              Price = d.Price,
-                              DiscountId = d.DiscountId,
-                              DiscountRate = d.DiscountRate,
-                              DiscountAmount = d.DiscountAmount,
-                              NetPrice = d.NetPrice,
-                              Quantity = d.Quantity,
-                              Amount = d.Amount,
-                              TaxId = d.TaxId,
-                              TaxRate = d.TaxRate,
-                              TaxAmount = d.TaxAmount,
-                              SalesAccountId = d.SalesAccountId,
-                              AssetAccountId = d.AssetAccountId,
-                              CostAccountId = d.CostAccountId,
-                              TaxAccountId = d.TaxAccountId,
-                              SalesLineTimeStamp = d.SalesLineTimeStamp,
-                              UserId = d.UserId,
-                              Preparation = d.Preparation,
-
-                          };
-            return (TrnSalesLine)sales.FirstOrDefault();
-        }
-
-        //**********************
-        //LIST         SALESLINE
-        //**********************
-        [HttpGet, Route("list")]
-        public List<Entities.TrnSalesLine> listSalesLine()
-        {
-            var salesLine = from d in db.TrnSalesLines
+                        where d.Id == Convert.ToInt32(id)
                         select new Entities.TrnSalesLine
                         {
                             Id = d.Id,
@@ -149,7 +115,42 @@ namespace POSApi.ApiControllers
                             SalesLineTimeStamp = d.SalesLineTimeStamp,
                             UserId = d.UserId,
                             Preparation = d.Preparation,
+
                         };
+            return (TrnSalesLine)sales.FirstOrDefault();
+        }
+
+        //**********************
+        //LIST         SALESLINE
+        //**********************
+        [HttpGet, Route("list")]
+        public List<Entities.TrnSalesLine> listSalesLine()
+        {
+            var salesLine = from d in db.TrnSalesLines
+                            select new Entities.TrnSalesLine
+                            {
+                                Id = d.Id,
+                                SalesId = d.SalesId,
+                                ItemId = d.ItemId,
+                                UnitId = d.UnitId,
+                                Price = d.Price,
+                                DiscountId = d.DiscountId,
+                                DiscountRate = d.DiscountRate,
+                                DiscountAmount = d.DiscountAmount,
+                                NetPrice = d.NetPrice,
+                                Quantity = d.Quantity,
+                                Amount = d.Amount,
+                                TaxId = d.TaxId,
+                                TaxRate = d.TaxRate,
+                                TaxAmount = d.TaxAmount,
+                                SalesAccountId = d.SalesAccountId,
+                                AssetAccountId = d.AssetAccountId,
+                                CostAccountId = d.CostAccountId,
+                                TaxAccountId = d.TaxAccountId,
+                                SalesLineTimeStamp = d.SalesLineTimeStamp,
+                                UserId = d.UserId,
+                                Preparation = d.Preparation,
+                            };
             return salesLine.ToList();
         }
 
@@ -189,7 +190,7 @@ namespace POSApi.ApiControllers
             catch (Exception e)
             {
                 // Debug.WriteLine(e);
-                return Request.CreateResponse(HttpStatusCode.BadRequest,e);
+                return Request.CreateResponse(HttpStatusCode.BadRequest, e);
             }
         }
 
