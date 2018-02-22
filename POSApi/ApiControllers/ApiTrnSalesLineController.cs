@@ -52,7 +52,7 @@ namespace POSApi.ApiControllers
         //DETAIL SALES LINE
         //******************
         [HttpGet, Route("listSalesLineBySalesId/{salesId}")]
-        public List<TrnSalesLine> listSalesLineBySalesId(String salesId)
+        public List<Entities.TrnSalesLine> listSalesLineBySalesId(String salesId)
         {
             var sales = from d in db.TrnSalesLines
                         where d.SalesId == Convert.ToInt32(salesId)
