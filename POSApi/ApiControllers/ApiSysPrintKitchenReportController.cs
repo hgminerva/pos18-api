@@ -278,8 +278,21 @@ namespace POSApi.ApiControllers
 
                 graphics.DrawLine(blackPen, secondLineFirstPoint, secondLineSecondPoint);
 
+                String preparationLabel = "Preparation:";
+                graphics.DrawString(preparationLabel, fontArial8Regular, drawBrush, new RectangleF(x, y + 15F, width, height), drawFormatLeft);
+                y += graphics.MeasureString(preparationLabel, fontArial8Regular).Height + 15.0F;
+
+                String preparationData = salesLine.FirstOrDefault().Preparation;
+                graphics.DrawString(preparationData, fontArial8Regular, drawBrush, new RectangleF(x, y, width, height), drawFormatLeft);
+                y += graphics.MeasureString(preparationData, fontArial8Regular).Height + 5.0F;
+
+                Point thirdLineFirstPoint = new Point(0, Convert.ToInt32(y) + 5);
+                Point thirdLineSecondPoint = new Point(500, Convert.ToInt32(y) + 5);
+
+                graphics.DrawLine(blackPen, thirdLineFirstPoint, thirdLineSecondPoint);
+
                 // ========
-                // Customer
+                // Order By
                 // ========
                 String orderByLabel = "Order By:";
                 RectangleF orderByLabelRectangle = new RectangleF
