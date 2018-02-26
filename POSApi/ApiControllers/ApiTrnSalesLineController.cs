@@ -182,7 +182,7 @@ namespace POSApi.ApiControllers
                 newSalesLine.TaxAccountId = objSalesLine.TaxAccountId;
                 newSalesLine.SalesLineTimeStamp = DateTime.Today;
                 newSalesLine.UserId = UserId();
-                newSalesLine.Preparation = "n/a";
+                newSalesLine.Preparation = objSalesLine.Preparation;
                 db.TrnSalesLines.InsertOnSubmit(newSalesLine);
                 db.SubmitChanges();
                 return Request.CreateResponse(HttpStatusCode.OK, newSalesLine.Id);
