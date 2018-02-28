@@ -75,7 +75,7 @@ namespace POSApi.ApiControllers
             StringFormat drawFormatRight = new StringFormat { Alignment = StringAlignment.Far };
 
             float x = 5, y = 5;
-            float width = 270.0F, height = 0F;
+            float width = 245.0F, height = 0F;
 
             // ==============
             // Tools Settings
@@ -119,7 +119,7 @@ namespace POSApi.ApiControllers
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(preparedByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(preparedByLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(preparedByLabel, fontArial8Regular, Brushes.Black, preparedByLabelRectangle, drawFormatLeft);
 
@@ -128,7 +128,7 @@ namespace POSApi.ApiControllers
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(preparedByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(preparedByData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(preparedByData, fontArial8Regular, Brushes.Black, preparedByDataRectangle, drawFormatLeft);
                     y += preparedByDataRectangle.Size.Height;
@@ -141,7 +141,7 @@ namespace POSApi.ApiControllers
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(customerLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(customerLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(customerLabel, fontArial8Regular, Brushes.Black, customerLabelRectangle, drawFormatLeft);
 
@@ -150,7 +150,7 @@ namespace POSApi.ApiControllers
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(customerData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(customerData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(customerData, fontArial8Regular, Brushes.Black, customerDataRectangle, drawFormatLeft);
                     y += customerDataRectangle.Size.Height;
@@ -168,7 +168,7 @@ namespace POSApi.ApiControllers
                         {
                             X = x,
                             Y = y,
-                            Size = new Size(270, ((int)graphics.MeasureString(terminalLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                            Size = new Size(245, ((int)graphics.MeasureString(terminalLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                         };
                         graphics.DrawString(terminalLabel, fontArial8Regular, Brushes.Black, terminalLabelRectangle, drawFormatLeft);
 
@@ -177,7 +177,7 @@ namespace POSApi.ApiControllers
                         {
                             X = 120,
                             Y = y,
-                            Size = new Size(270, ((int)graphics.MeasureString(terminalNoData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                            Size = new Size(245, ((int)graphics.MeasureString(terminalNoData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                         };
                         graphics.DrawString(terminalNoData, fontArial8Regular, Brushes.Black, terminalNoDataRectangle, drawFormatLeft);
                         y += terminalNoDataRectangle.Size.Height;
@@ -191,7 +191,7 @@ namespace POSApi.ApiControllers
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(tableLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(tableLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(tableLabel, fontArial8Regular, Brushes.Black, tableLabelRectangle, drawFormatLeft);
 
@@ -200,7 +200,7 @@ namespace POSApi.ApiControllers
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(tableData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(tableData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(tableData, fontArial8Regular, Brushes.Black, tableDataRectangle, drawFormatLeft);
                     y += tableDataRectangle.Size.Height;
@@ -213,7 +213,7 @@ namespace POSApi.ApiControllers
                     {
                         X = x,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(transDateLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(transDateLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(transDateLabel, fontArial8Regular, Brushes.Black, transDateLabelRectangle, drawFormatLeft);
 
@@ -222,7 +222,7 @@ namespace POSApi.ApiControllers
                     {
                         X = 120,
                         Y = y,
-                        Size = new Size(270, ((int)graphics.MeasureString(transactionDateData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                        Size = new Size(245, ((int)graphics.MeasureString(transactionDateData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                     };
                     graphics.DrawString(transactionDateData, fontArial8Regular, Brushes.Black, transDateRectangle, drawFormatLeft);
                     y += transDateRectangle.Size.Height + 20;
@@ -267,7 +267,7 @@ namespace POSApi.ApiControllers
                 String qtyData = salesLine.FirstOrDefault().Quantity.ToString("#,##0.00");
                 RectangleF qtyDataRectangle = new RectangleF
                 {
-                    X = x + 100.0F,
+                    X = x + 90.0F,
                     Y = y,
                     Size = new Size(150, ((int)graphics.MeasureString(qtyData, fontArial8Regular, 150, StringFormat.GenericTypographic).Height))
                 };
@@ -300,7 +300,7 @@ namespace POSApi.ApiControllers
                 {
                     X = x,
                     Y = y + 15F,
-                    Size = new Size(270, ((int)graphics.MeasureString(orderByLabel, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(245, ((int)graphics.MeasureString(orderByLabel, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                 };
                 graphics.DrawString(orderByLabel, fontArial8Regular, Brushes.Black, orderByLabelRectangle, drawFormatLeft);
 
@@ -309,7 +309,7 @@ namespace POSApi.ApiControllers
                 {
                     X = 120,
                     Y = y + 15F,
-                    Size = new Size(270, ((int)graphics.MeasureString(orderByData, fontArial8Regular, 270, StringFormat.GenericTypographic).Height))
+                    Size = new Size(245, ((int)graphics.MeasureString(orderByData, fontArial8Regular, 245, StringFormat.GenericTypographic).Height))
                 };
                 graphics.DrawString(orderByData, fontArial8Regular, Brushes.Black, orderByDataRectangle, drawFormatLeft);
                 y += orderByDataRectangle.Size.Height;
