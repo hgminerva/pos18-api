@@ -190,3 +190,6 @@ ModelManifest.xml
 *.ide-wal
 *.ide-shm
 /.vs/POSApi/v15/Server/sqlite3/db.lock
+
+# Ignore Changes (Custom)
+/.vs

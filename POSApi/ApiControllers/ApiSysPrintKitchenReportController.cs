@@ -37,7 +37,8 @@ namespace POSApi.ApiControllers
 
                 PrinterSettings ps = new PrinterSettings
                 {
-                    PrinterName = "EPSON TM-T81 Receipt"
+                    //PrinterName = "EPSON TM-T81 Receipt"
+                    PrinterName = "EPSON TM-U220 Receipt"
                 };
 
                 PrintDocument pd = new PrintDocument();
