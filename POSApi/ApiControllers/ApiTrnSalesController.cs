@@ -207,7 +207,7 @@ namespace POSApi.ApiControllers
                 newSales.SeniorCitizenId = objSales.SeniorCitizenId;
                 newSales.SeniorCitizenName = objSales.SeniorCitizenName;
                 newSales.SeniorCitizenAge = objSales.SeniorCitizenAge;
-                newSales.Remarks = objSales.Remarks;
+                newSales.Remarks = "NA";
                 newSales.SalesAgent = objSales.SalesAgent;
                 newSales.TerminalId = objSales.TerminalId;
                 newSales.PreparedBy = objSales.PreparedBy;
@@ -263,7 +263,7 @@ namespace POSApi.ApiControllers
                     updateSales.SeniorCitizenId = sale.SeniorCitizenId;
                     updateSales.SeniorCitizenName = sale.SeniorCitizenName;
                     updateSales.SeniorCitizenAge = sale.SeniorCitizenAge;
-                    updateSales.Remarks = sale.Remarks;
+                    updateSales.Remarks = "NA";
                     updateSales.SalesAgent = sale.SalesAgent;
                     updateSales.TerminalId = sale.TerminalId;
                     updateSales.PreparedBy = sale.PreparedBy;
